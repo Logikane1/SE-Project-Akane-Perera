@@ -38,6 +38,13 @@ def create_background(name):
         tiles.append(position)
     return tiles, image
 
+def draw(game_window, background, bg_image, player): # draws the background
+    for tile in background:
+        game_window.blit(bg_image, tile)
+        
+        player.draw(game_window)
+        pygame.display.update()
+
 def main(game_window):
     clock = pygame.time.Clock()
     background, bg_image = create_background()
