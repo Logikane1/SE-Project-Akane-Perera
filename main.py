@@ -15,9 +15,44 @@ PLAYER_VELOCITY = 5
 
 game_window = pygame.display.set_mode((WIDTH, HEIGHT)) # Creates Window for Game to Appear
 
+def flip(sprites):
+    return [pygame.transform.flip(sprite, True, False) for sprite in sprites] # True and False determines if we flip in the x direction or not
+
+def load_spritesheets(dir1, width, height, direction=False):
+    path = join("assets", dir1 )
+    images = [f for f in listdir(path) if isfile(join(path, f))] # will load every file in the directory
+    
+    allsprites = {}
+    
+    for image in images:
+        spritesheet = pygame.image.load(join(path, image)).convert_alpha()
+        
+        sprites = []
+        for i in range(spritesheet.get_width() // width):
+            surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
+            rect = pygame.Rect(i * width, 0, width, height)
+            surface.blit(spritesheet, (0, 0), rect)
+            sprites.append(pygame.transform.scale2x(surface))
+
+        if direction:
+            allsprites[image.replace(".png", "") + "_right"] = sprites
+            allsprites[image.replace(".png", "") + "_left"] = flip(sprites)
+        else:
+            allsprites[image.replace(".png", "")] + sprites
+    
+    return allsprites
+    
+    
+    
+        
+        
+        
+        
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
+    SPRITES = load_spritesheets("Character", 32, 32, True)
+    ANIMATION_DELAY = 3
     
     def __init__(self, x, y, width, height):
         self.rect = pygame.Rect(x, y, width, height) # uses rectangles to move the player
@@ -45,12 +80,32 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
         
     def loop(self, fps):
-        self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
+        # self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
         self.move(self.x_velocity, self.y_velocity) #updates both velocity
         self.gravity_count += 1
+        self.update_sprite()
         
-    def draw(self, window):
-        pygame.draw.rect(window, self.COLOR, self.rect)
+        
+    def update_sprite(self):
+        spritesheet = "idle"
+        if self.x_velocity != 0:
+            spritesheet = "run"
+        
+        spritesheet_name = spritesheet + "_" + self.direction
+        sprites = self.SPRITES[spritesheet_name]
+        sprite_index = (self.animation_count //  self.ANIMATION_DELAY) % len(sprites) # takes animation count, divides it by the animation delay value and mods whatever the line of the sprites
+        self.sprite = sprites[sprite_index]
+        self.animation_count += 1
+        self.update()
+    
+    
+    def update(self):
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y)) # constantly adjusts the width and height of the sprite image's rectangle using its x and y positions
+        self.mask = pygame.mask.from_surface(self.sprite) # maps the pixels in the sprite (allows to perform pixel perfect collision)
+    
+    
+    def draw(self, win):
+        win.blit(self.sprite, (self.rect.x, self.rect.y))
     
 def create_background(name):
     image = pygame.image.load(join("assets", "Background", name))
