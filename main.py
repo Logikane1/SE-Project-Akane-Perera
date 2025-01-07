@@ -44,7 +44,8 @@ def load_spritesheets(dir1, width, height, direction=False):
     
     
     
-        
+# def get_block(size):
+#    path = join("assets", "Terrain")
         
         
         
@@ -55,6 +56,7 @@ class Player(pygame.sprite.Sprite):
     ANIMATION_DELAY = 3
     
     def __init__(self, x, y, width, height):
+        super().__init__()
         self.rect = pygame.Rect(x, y, width, height) # uses rectangles to move the player
         self.x_velocity = 0
         self.y_velocity = 0
@@ -106,7 +108,39 @@ class Player(pygame.sprite.Sprite):
     
     def draw(self, win):
         win.blit(self.sprite, (self.rect.x, self.rect.y))
+        
+
+
+
+
+
+class Object(pygame.sprite.Sprite): # base class that defines all properties needed for sprites
+    def __init__(self, x, y, width, height, name=None):
+        super().__init__()
+        self.rect = pygame.Rect(x, y, width, height)
+        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.width = width
+        self.height = height
+        self.name = name
+        
+    def draw(self, win):
+        win.blit(self.image, (self.rect.x, self.rect.y))
+        
+#class Block(Object):
+#    def __init__(self, x, y, size):
+#        super().__init__(x, y, size, size)
+#        block = load_block(size) # will make load_block later
+#        self.image.blit(block, (0, 0))
+#        self.mask = pygame.mask.from_surface(self.image)
+        
     
+
+
+
+
+
+
+
 def create_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
@@ -132,6 +166,10 @@ def handle_move(player):
         player.move_left(PLAYER_VELOCITY)
     if keypress[pygame.K_d]:
         player.move_right(PLAYER_VELOCITY)
+
+
+
+
 
 def main(game_window):
     
