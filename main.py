@@ -44,8 +44,15 @@ def load_spritesheets(dir1, width, height, direction=False):
     
     
     
-# def get_block(size):
-#    path = join("assets", "Terrain")
+def load_block(size):
+    path = join("assets", "Terrain", "terrain.png")
+    image = pygame.image.load(path).convert_alpha()
+    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32) # creates image of the designated size
+    rect  = pygame.Rect(96, 0, size, size) # makes rectangle of at the position of thr top left hand side of the image
+    surface.blit(image, (0, 0), rect ) # blits the image onto the surface
+    return pygame.transform.scale2x(surface) # returns the image scaled by 2
+    
+    
         
         
         
@@ -126,19 +133,14 @@ class Object(pygame.sprite.Sprite): # base class that defines all properties nee
     def draw(self, win):
         win.blit(self.image, (self.rect.x, self.rect.y))
         
-#class Block(Object):
-#    def __init__(self, x, y, size):
-#        super().__init__(x, y, size, size)
-#        block = load_block(size) # will make load_block later
-#        self.image.blit(block, (0, 0))
-#        self.mask = pygame.mask.from_surface(self.image)
+class Block(Object):
+    def __init__(self, x, y, size):
+        super().__init__(x, y, size, size)
+        block = load_block(size) # will make load_block later
+        self.image.blit(block, (0, 0))
+        self.mask = pygame.mask.from_surface(self.image)
         
     
-
-
-
-
-
 
 
 def create_background(name):
@@ -151,13 +153,18 @@ def create_background(name):
             tiles.append(position)
     return tiles, image
 
-def draw(game_window, background, bg_image, player): # draws the background
+def draw(game_window, background, bg_image, player, objects): # draws the background
     for tile in background:
         game_window.blit(bg_image, tile)
         
+    for o in objects:
+        o.draw(game_window)
+    
     player.draw(game_window)
     pygame.display.update()
         
+
+
 def handle_move(player):
     keypress = pygame.key.get_pressed()
     player.x_velocity = 0
@@ -176,7 +183,12 @@ def main(game_window):
     clock = pygame.time.Clock()
     background, bg_image = create_background("Green.png")
     
+    block_size = 96
+    
     player = Player(100,100, 50, 50)
+    blocks = [Block(0, HEIGHT - block_size, block_size)] # creates the block
+    floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
+    
     
     run = True
     while run:
@@ -186,9 +198,10 @@ def main(game_window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+        
         player.loop(FPS)
         handle_move(player)
-        draw(game_window, background, bg_image, player)
+        draw(game_window, background, bg_image, player, floor)
     pygame.quit()
     quit()
 
