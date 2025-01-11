@@ -102,7 +102,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
         self.move(self.x_velocity, self.y_velocity) #updates both velocity
         
-        self.fall_count += 1
+        self.gravity_count += 1
         self.update_sprite()
         
             
