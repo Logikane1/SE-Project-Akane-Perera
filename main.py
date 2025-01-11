@@ -178,7 +178,7 @@ def create_background(name):
             tiles.append(position)
     return tiles, image
 
-def draw(game_window, background, bg_image, player, objects, offset_x): # draws the background
+def draw(game_window, background, bg_image, player, floor, objects, offset_x): # draws the background
     for tile in background:
         game_window.blit(bg_image, tile)
         
@@ -224,8 +224,11 @@ def main(game_window):
     
     player = Player(100, 100, 50, 50)
     
-    floor = [Block(i * block_size, HEIGHT - block_size, block_size) 
+    o = [Block(i * block_size, HEIGHT - block_size, block_size) 
             for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)a
+    
+    floor = [Block(i * block_size, HEIGHT - block_size, block_size) 
+        for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
     
     run = True
     while run:
@@ -243,8 +246,8 @@ def main(game_window):
                     
         
         player.loop(FPS)
-        handle_move(player)
-        draw(game_window, background, bg_image, player, floor)
+        handle_move(player, floor)
+        draw(game_window, background, bg_image, player, floor )
     
     pygame.quit()
     quit()
