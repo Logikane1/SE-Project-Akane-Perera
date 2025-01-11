@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
     SPRITES = load_spritesheets("Character", 32, 32, True)
-    ANIMATION_DELAY = 2
+    ANIMATION_DELAY = 3
     
     def __init__(self, x, y, width, height):
         super().__init__()
@@ -71,7 +71,16 @@ class Player(pygame.sprite.Sprite):
         self.direction = "left"
         self.animation_count = 0
         self.gravity_count = 0
+        self.jump_count = 0 
         
+    def jump(self):
+        self.y_velocity = -self.GRAVITY * 18  # using negative gravity to move the player up and normal gravity that has already been implemented to pull the player back down
+        self.animation_count = 0
+        self.jump_count += 1
+        if self.jump_count == 1:
+            self.count = 0
+    
+    
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
@@ -89,19 +98,39 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
         
     def loop(self, fps):
-        self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
+<<<<<<< HEAD
+        # self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
+=======
+        if not self.on_ground():
+            self.y_velocity += min(1, (self.gravity_count / fps) * self.GRAVITY) # Calculates the amount of time the player has been falling and multiplies this by the gravity constant, this tells us how much to increment y.velocity
+>>>>>>> parent of c1cfb6a... Revert "Codded player animations for movement, fixed running animation issue, changed player to spawn on the floor instead of from the sky"
         self.move(self.x_velocity, self.y_velocity) #updates both velocity
         self.gravity_count += 1
         self.update_sprite()
+        
+<<<<<<< HEAD
+        
+=======
+    def on_ground(self):
+        return self.y_velocity == 0 and self.jump_count == 0
             
+>>>>>>> parent of c1cfb6a... Revert "Codded player animations for movement, fixed running animation issue, changed player to spawn on the floor instead of from the sky"
     def update_sprite(self):
         spritesheet = "idle"
-        if self.x_velocity != 0:
+        if self.y_velocity < 0:
+            if self.jump_count == 1:
+                spritesheet = "jump"
+            elif self.jump_count == 2:
+                spritesheet = "double_jump"  
+        elif self.y_velocity > self.GRAVITY * 3:
+            spritesheet = "fall"
+        elif self.x_velocity != 0:
             spritesheet = "run"
         
         spritesheet_name = spritesheet + "_" + self.direction
         sprites = self.SPRITES[spritesheet_name]
         sprite_index = (self.animation_count //  self.ANIMATION_DELAY) % len(sprites) # takes animation count, divides it by the animation delay value and mods whatever the line of the sprites
+        
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         self.update()
@@ -112,18 +141,23 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite) # maps the pixels in the sprite (allows to perform pixel perfect collision)
     
     
-    def draw(self, win):
-        win.blit(self.sprite, (self.rect.x, self.rect.y))
+    def draw(self, win, offset_x):
+        win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
         
 
+<<<<<<< HEAD
+
+
+=======
     def landed(self):
         self.fall_count = 0 # stops adding gravity to player
         self.y_velocity = 0
         self.jump_count = 0 # for double jumping (added later)
         
-    def hit_head(self):
+    def hit_head(self,):
         self.count = 0 
         self.y_velocity *= -1 # hits the player downwards
+>>>>>>> parent of c1cfb6a... Revert "Codded player animations for movement, fixed running animation issue, changed player to spawn on the floor instead of from the sky"
 
 
 class Object(pygame.sprite.Sprite): # base class that defines all properties needed for sprites
@@ -135,8 +169,8 @@ class Object(pygame.sprite.Sprite): # base class that defines all properties nee
         self.height = height
         self.name = name
         
-    def draw(self, win):
-        win.blit(self.image, (self.rect.x, self.rect.y))
+    def draw(self, win, offset_x):
+        win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
         
 class Block(Object):
     def __init__(self, x, y, size):
@@ -158,20 +192,23 @@ def create_background(name):
             tiles.append(position)
     return tiles, image
 
-def draw(game_window, background, bg_image, player, objects): # draws the background
+def draw(game_window, background, bg_image, player, objects, offset_x): # draws the background
     for tile in background:
         game_window.blit(bg_image, tile)
         
     for o in objects:
-        o.draw(game_window)
+        o.draw(game_window, offset_x)
     
-    player.draw(game_window)
+    player.draw(game_window, offset_x)
     pygame.display.update()
         
 
 
+<<<<<<< HEAD
+def handle_move(player):
+=======
 def vertical_collision(player, objects, dy):
-    collided_objects = []
+
     for obj in objects:
         if pygame.sprite.collide_mask(player, obj): # passes the player and object and will tell us if they are colliding using the masks and rectangles of both of these
             if dy > 0:
@@ -180,16 +217,10 @@ def vertical_collision(player, objects, dy):
             elif dy < 0:
                 player.rect.top = obj.rect.bottom # same thing as above but if the player is in the air, it wil place the player below the object its colliding with
                 player.hit_head()
-        
-        collided_objects.append(obj)
-    
-    return collided_objects
-
-
-
-
+            player.y_velocity = 0
 
 def handle_move(player, objects):
+>>>>>>> parent of c1cfb6a... Revert "Codded player animations for movement, fixed running animation issue, changed player to spawn on the floor instead of from the sky"
     keypress = pygame.key.get_pressed()
     player.x_velocity = 0
     
@@ -197,11 +228,6 @@ def handle_move(player, objects):
         player.move_left(PLAYER_VELOCITY)
     if keypress[pygame.K_d]:
         player.move_right(PLAYER_VELOCITY)
-        
-    vertical_collision(player, objects, player.y_velocity)
-
-
-
 
 
 def main(game_window):
@@ -211,10 +237,13 @@ def main(game_window):
     
     block_size = 96
     
-    player = Player(100,100, 50, 50)
-    blocks = [Block(0, HEIGHT - block_size, block_size)] # creates the block
-    floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
+    player = Player(100, 540, 50, 50)
     
+    floor = [Block(i * block_size, HEIGHT - block_size, block_size) 
+            for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
+    
+    offset_x = 0
+    scroll_area_width = 200
     
     run = True
     while run:
@@ -224,11 +253,26 @@ def main(game_window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player.jump_count < 2:
+                    player.jump()
+                    
         
         player.loop(FPS)
-        handle_move(player, floor)
+<<<<<<< HEAD
+        handle_move(player)
         draw(game_window, background, bg_image, player, floor)
+=======
+        handle_move(player, floor)
+        draw(game_window, background, bg_image, player, floor, offset_x)
+        
+        if ((player.rect.right - offset_x >=  WIDTH - scroll_area_width) and player.x_velocity > 0) or (
+            (player.rect.left - offset_x <=  scroll_area_width) and player.x_velocity < 0): # checks if the player is close enough to the edge of the screen to start scrolling the background
+            
+            offset_x += player.x_velocity
     
+>>>>>>> parent of c1cfb6a... Revert "Codded player animations for movement, fixed running animation issue, changed player to spawn on the floor instead of from the sky"
     pygame.quit()
     quit()
 
