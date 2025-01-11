@@ -133,8 +133,8 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite) # maps the pixels in the sprite (allows to perform pixel perfect collision)
     
     
-    def draw(self, win):
-        win.blit(self.sprite, (self.rect.x, self.rect.y))
+    def draw(self, win, offset_x):
+        win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
         
 
     def landed(self):
@@ -142,7 +142,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity = 0
         self.jump_count = 0 # for double jumping (added later)
         
-    def hit_head(self):
+    def hit_head(self,):
         self.count = 0 
         self.y_velocity *= -1 # hits the player downwards
 
@@ -156,8 +156,8 @@ class Object(pygame.sprite.Sprite): # base class that defines all properties nee
         self.height = height
         self.name = name
         
-    def draw(self, win):
-        win.blit(self.image, (self.rect.x, self.rect.y))
+    def draw(self, win, offset_x):
+        win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
         
 class Block(Object):
     def __init__(self, x, y, size):
@@ -179,14 +179,14 @@ def create_background(name):
             tiles.append(position)
     return tiles, image
 
-def draw(game_window, background, bg_image, player, objects): # draws the background
+def draw(game_window, background, bg_image, player, objects, offset_x): # draws the background
     for tile in background:
         game_window.blit(bg_image, tile)
         
     for o in objects:
-        o.draw(game_window)
+        o.draw(game_window, offset_x)
     
-    player.draw(game_window)
+    player.draw(game_window, offset_x)
     pygame.display.update()
         
 
@@ -224,10 +224,11 @@ def main(game_window):
     
     player = Player(100, 540, 50, 50)
     
-    blocks = [Block(0, HEIGHT - block_size, block_size)] # creates the block
     floor = [Block(i * block_size, HEIGHT - block_size, block_size) 
             for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
     
+    offset_x = 0
+    scroll_area_width = 200
     
     run = True
     while run:
@@ -245,7 +246,12 @@ def main(game_window):
         
         player.loop(FPS)
         handle_move(player, floor)
-        draw(game_window, background, bg_image, player, floor)
+        draw(game_window, background, bg_image, player, floor, offset_x)
+        
+        if ((player.rect.right - offset_x >=  WIDTH - scroll_area_width) and player.x_velocity > 0) or (
+            (player.rect.left - offset_x <=  scroll_area_width) and player.x_velocity < 0): # checks if the player is close enough to the edge of the screen to start scrolling the background
+            
+            offset_x += player.x_velocity
     
     pygame.quit()
     quit()
