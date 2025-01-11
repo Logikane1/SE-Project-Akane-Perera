@@ -230,6 +230,9 @@ def main(game_window):
     floor = [Block(i * block_size, HEIGHT - block_size, block_size) 
         for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)] # creates blocks that generate in both x directions (basically creates floor for scrolling background)
     
+    offset_x = 0
+    scroll_area_width = 200
+    
     run = True
     while run:
         clock.tick(FPS) # sets the default Frame rate to 60
@@ -247,8 +250,13 @@ def main(game_window):
         
         player.loop(FPS)
         handle_move(player, floor)
-        draw(game_window, background, bg_image, player, floor )
-    
+        draw(game_window, background, bg_image, player, floor, offset_x)
+        
+        if ((player.rect.right - offset_x >=  WIDTH - scroll_area_width) and player.x_velocity > 0) or (
+            (player.rect.left - offset_x <=  scroll_area_width) and player.x_velocity < 0): # checks if the player is close enough to the edge of the screen to start scrolling the background
+            
+            offset_x += player.x_velocity
+            
     pygame.quit()
     quit()
 
