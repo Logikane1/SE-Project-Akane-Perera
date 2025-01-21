@@ -104,12 +104,19 @@ class Player(pygame.sprite.Sprite):
             
     def update_sprite(self):
         spritesheet = "idle"
-        if self.x_velocity != 0:
+        if self.y_velocity < 0:
+            if self.jump_count == 1:
+                spritesheet = "jump"
+            elif self.jump_count == 2:
+                spritesheet = "double_jump"
+        elif self.y_velocity > self.GRAVITY * 2:
+            spritesheet = "fall"
+        elif self.x_velocity != 0:
             spritesheet = "run"
         
         spritesheet_name = spritesheet + "_" + self.direction
         sprites = self.SPRITES[spritesheet_name]
-        sprite_index = (self.animation_count //  self.ANIMATION_DELAY) % len(sprites) # takes animation count, divides it by the animation delay value and mods whatever the line of the sprites
+        sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites) # takes animation count, divides it by the animation delay value and mods whatever the line of the sprites
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         self.update()
