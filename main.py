@@ -231,10 +231,36 @@ def handle_move(player, objects):
     vertical_collision(player, objects, player.y_velocity)
 
 
+class Button:
+    def __init__(self, x, y, width, height, text, font, base_color, hover_color):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.font = font
+        self.base_color  = base_color
+        self.hover_color = hover_color
+        self.current_color = base_color
+    
+    def draw(self,win):
+        pygame.draw.rect(win, self.current_color, self.rect, border_radius=10) # creates button rectangle
+        
+        text_surface = self.font.render(self.text, True, (0, 0, 0)) # generates the text 
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        win.blit(text_surface, text_rect)
+        
+    def button_hovered(self):
+        return (self.rect.collidepoint(pygame.mouse.get_pos())) # finds the current position of the mouse and checks if inside the button
+
+    def update(self):
+        if self.button_hovered():
+            self.current_color = self.hover_color
+        else:
+            self.current_color = self.base_color
+            
+    def button_clicked(self):
+        return self.button_hovered() and pygame.mouse.get_pressed()[0] # checks if left click is pressed, [0] represents left click
 
 
-
-def main(game_window):
+def start_game(game_window):
     
     clock = pygame.time.Clock()
     background, bg_image = create_background("Green.png")
@@ -278,6 +304,7 @@ def main(game_window):
     
     pygame.quit()
     quit()
+    
 
 if __name__ == "__main__":  # only calls main function if file is run directly 
-    main(game_window)
+    start_game(game_window)
