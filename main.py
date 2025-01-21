@@ -71,6 +71,14 @@ class Player(pygame.sprite.Sprite):
         self.direction = "left"
         self.animation_count = 0
         self.gravity_count = 0
+        self.jump_count = 0
+        
+    def jump(self):
+        self.y_velocity = -self.GRAVITY * 8
+        self.animation_count = 0
+        self.jump_count += 1
+        if self.jump_count == 1:
+            self.gravity_count = 0
         
     def move(self, dx, dy):
         self.rect.x += dx
@@ -106,7 +114,6 @@ class Player(pygame.sprite.Sprite):
         self.animation_count += 1
         self.update()
     
-    
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y)) # constantly adjusts the width and height of the sprite image's rectangle using its x and y positions
         self.mask = pygame.mask.from_surface(self.sprite) # maps the pixels in the sprite (allows to perform pixel perfect collision)
@@ -117,7 +124,7 @@ class Player(pygame.sprite.Sprite):
         
 
     def landed(self):
-        self.fall_count = 0 # stops adding gravity to player
+        self.gravity_count = 0 # stops adding gravity to player
         self.y_velocity = 0
         self.jump_count = 0 # for double jumping (added later)
         
@@ -191,6 +198,7 @@ def vertical_collision(player, objects, dy):
 
 def handle_move(player, objects):
     keypress = pygame.key.get_pressed()
+    
     player.x_velocity = 0
     
     if keypress[pygame.K_a]:
@@ -224,6 +232,11 @@ def main(game_window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+            
+            
+        if event.type == pygame.KEYDOWN:
+            if event.key ==  pygame.K_SPACE and player.jump_count < 2:
+                player.jump()
         
         player.loop(FPS)
         handle_move(player, floor)
