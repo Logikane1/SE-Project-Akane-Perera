@@ -13,6 +13,8 @@ WIDTH, HEIGHT = 1000, 700
 FPS = 60
 PLAYER_VELOCITY = 5
 
+clock = pygame.time.Clock()
+
 game_window = pygame.display.set_mode((WIDTH, HEIGHT)) # Creates Window for Game to Appear
 
 def flip(sprites):
@@ -42,8 +44,6 @@ def load_spritesheets(dir1, width, height, direction=False):
     
     return allsprites
     
-    
-    
 def load_block(size):
     path = join("assets", "Terrain", "terrain.png")
     image = pygame.image.load(path).convert_alpha()
@@ -52,10 +52,6 @@ def load_block(size):
     surface.blit(image, (0, 0), rect ) # blits the image onto the surface
     return pygame.transform.scale2x(surface) # returns the image scaled by 2
     
-    
-        
-        
-        
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
@@ -125,11 +121,9 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y)) # constantly adjusts the width and height of the sprite image's rectangle using its x and y positions
         self.mask = pygame.mask.from_surface(self.sprite) # maps the pixels in the sprite (allows to perform pixel perfect collision)
     
-    
     def draw(self, win, offset_x):
         win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
         
-
     def landed(self):
         self.gravity_count = 0 # stops adding gravity to player
         self.y_velocity = 0
@@ -138,7 +132,6 @@ class Player(pygame.sprite.Sprite):
     def hit_head(self):
         self.count = 0 
         self.y_velocity *= -1 # hits the player downwards
-
 
 class Object(pygame.sprite.Sprite): # base class that defines all properties needed for sprites
     def __init__(self, x, y, width, height, name=None):
@@ -159,9 +152,6 @@ class Block(Object):
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
         
-    
-
-
 def create_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
@@ -182,8 +172,6 @@ def draw(game_window, background, bg_image, player, objects, offset_x): # draws 
     player.draw(game_window, offset_x)
     pygame.display.update()
         
-
-
 def vertical_collision(player, objects, dy):
     collided_objects = []
     for obj in objects:
@@ -199,7 +187,6 @@ def vertical_collision(player, objects, dy):
     
     return collided_objects
 
-
 def collide(player, objects, dx):
     player.move(dx, 0) # premetively moves player to where they would be when the collide 
     player.update() # updates the mask to check if there is a collision
@@ -213,7 +200,6 @@ def collide(player, objects, dx):
     player.update() # updates mask again
     return collided_object
             
-
 
 def handle_move(player, objects):
     keypress = pygame.key.get_pressed()
@@ -230,7 +216,6 @@ def handle_move(player, objects):
         
     vertical_collision(player, objects, player.y_velocity)
 
-
 class Button:
     def __init__(self, x, y, width, height, text, font, base_color, hover_color):
         self.rect = pygame.Rect(x, y, width, height)
@@ -242,23 +227,77 @@ class Button:
     
     def draw(self,win):
         pygame.draw.rect(win, self.current_color, self.rect, border_radius=10) # creates button rectangle
-        
         text_surface = self.font.render(self.text, True, (0, 0, 0)) # generates the text 
         text_rect = text_surface.get_rect(center=self.rect.center)
         win.blit(text_surface, text_rect)
         
-    def button_hovered(self):
+    def is_hovered(self):
         return (self.rect.collidepoint(pygame.mouse.get_pos())) # finds the current position of the mouse and checks if inside the button
 
     def update(self):
-        if self.button_hovered():
+        if self.is_hovered():
             self.current_color = self.hover_color
         else:
             self.current_color = self.base_color
             
-    def button_clicked(self):
-        return self.button_hovered() and pygame.mouse.get_pressed()[0] # checks if left click is pressed, [0] represents left click
 
+def title_screen(game_window):
+    font  = pygame.font.Font(None, 50)
+    title_font = pygame.font.Font(None, 100)
+    
+    start_button = Button(400, 300, 200, 60, "Start Game", font, (0, 200, 0), (0, 255, 0))
+    settings_button = Button(400, 400, 200, 60, "Settings", font, (0, 200, 0), (0, 255, 0))
+    quit_button = Button(400, 500, 200, 60, "Quit", font, (200, 0, 0), (255, 0, 0))
+    
+    run = True
+    
+    while run:
+        clock.tick(FPS)
+        game_window.fill((30, 30, 30))
+        
+        title_surface = title_font.render("The Archon", True, (255, 255, 255))
+        title_rect = title_surface.get_rect(center=(500, 150))
+        game_window.blit(title_surface, title_rect)
+        
+        for button in [start_button, settings_button, quit_button]:
+            button.update()
+            button.draw(game_window)
+            
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run == False
+                
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button.is_hovered():
+                    start_game(game_window)
+                if settings_button.is_hovered():
+                    settings_screen(game_window)
+                if quit_button.is_hovered():
+                    run = False
+                    
+        pygame.display.update()
+        
+def settings_screen(game_window):
+    run = True
+    font  = pygame.font.Font(None, 50)
+    back_button = Button(300, 400, 200, 60, "Back", font, (200, 200, 0), (255, 255, 0))
+    
+    while run:
+        clock.tick(FPS)
+        game_window.fill((50, 50, 50))
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.is_hovered():
+                    return
+        
+        back_button.update()
+        back_button.draw(game_window)
+        
+        pygame.display.update()
 
 def start_game(game_window):
     
@@ -301,10 +340,8 @@ def start_game(game_window):
             (player.rect.left - offset_x <= scroll_area_width) and player.x_velocity < 0):
             offset_x += player.x_velocity
     
-    
-    pygame.quit()
-    quit()
-    
+def main():
+    title_screen(game_window)
 
 if __name__ == "__main__":  # only calls main function if file is run directly 
-    start_game(game_window)
+    main()
