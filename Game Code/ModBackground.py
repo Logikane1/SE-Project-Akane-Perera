@@ -4,7 +4,7 @@ from Configuration import *
 
 class Background():
     def __init__(self):
-        self.backgroundImage = pygame.image.load(SPRITESHEET_PATH).convert()
+        self.backgroundImage = pygame.image.load(SPRITESHEET_PATH + "/Backgrounds/Archon_Sky.png").convert()
         self.backgroundImage = pygame.transform.scale(self.backgroundImage, (WINDOW_WIDTH, WINDOW_HEIGHT))
         
     def draw(self, displayWindow):
