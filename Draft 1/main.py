@@ -35,7 +35,6 @@ def load_spritesheets(dir1, width, height, direction=False):
             rect = pygame.Rect(i * width, 0, width, height)
             surface.blit(spritesheet, (0, 0), rect)
             sprites.append(pygame.transform.scale2x(surface))
-
         if direction:
             allsprites[image.replace(".png", "") + "_right"] = sprites
             allsprites[image.replace(".png", "") + "_left"] = flip(sprites)
