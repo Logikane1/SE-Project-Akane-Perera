@@ -4,14 +4,14 @@ from ModSpriteSheet import Spritesheet
 
 
 Flying_EyeSprites = [
-    (16, 0, 47, 47),
-    (80, 0, 47, 47),
-    (144, 0, 47, 47),
-    (208, 0, 47, 47),
-    (272, 0, 47, 47),
-    (336, 0, 47, 47),
-    (400, 0, 47, 47),
-    (464, 0, 47, 47),
+    (0, 8, 47, 47),
+    (64, 8, 47, 47),
+    (128, 8, 47, 47),
+    (192, 8, 47, 47),
+    (256, 8, 47, 47),
+    (320, 8, 47, 47),
+    (384, 8, 47, 47),
+    (448, 8, 47, 47),
 ]
 
 
@@ -25,6 +25,9 @@ class Flying_Eye():
         self.image = self.eyeSpritesheet.getSprites(move_right)[0]
         self.rect = self.image.get_rect(bottomleft = position)
         self.move_right = move_right
+
+        self.animationCount = 0
+        self.enemyState = "FLY"
     
     def update(self, level):
         if self.move_right == False:
@@ -37,11 +40,23 @@ class Flying_Eye():
             self.move_right = True
         if self.rect.left > WINDOW_WIDTH:
             self.move_right = False
+                
+        self.selectAnimation()
+        
+        
+        self.animationCount += self.animationSpeed
+        if self.animationCount >= len(self.currentAnimation):
+            self.animationCount = 0
             
+        self.image = self.currentAnimation[int(self.animationCount)]
+        
         self.image = self.eyeSpritesheet.getSprites(self.move_right)[0]
             
             
-    
-            
     def draw(self, displayWindow):
         displayWindow.blit(self.image, self.rect)
+        
+    def selectAnimation(self):
+        self.animationSpeed = ANIMATIONSPEED_EYE
+        if self.enemyState == "FLY":
+            self.currentAnimation = self.eyeSpritesheet.getSprites(flipped = self.move_right)
