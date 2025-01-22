@@ -5,12 +5,11 @@ from ModLevel import Level
 pygame.init()
 time = pygame.time.Clock()
 
-
-level = Level()
 displayWindow = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("The Archon")
 
 run = True
+level = Level(displayWindow)
 
 while run:
     for event in pygame.event.get():
