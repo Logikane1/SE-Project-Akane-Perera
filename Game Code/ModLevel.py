@@ -6,7 +6,7 @@ class Level():
     def __init__(self, displayWindow):
         
         self.displayWindow = displayWindow
-        self.backgroundImage = pygame.image.load(SPRITESHEET_PATH + "Backgrounds/Archon_Sky.png").convert()
+        self.backgroundImage = pygame.image.load(SPRITESHEET_PATH + "Archon_Sky.png").convert()
         self.backgroundImage = pygame.transform.scale(self.backgroundImage, (WINDOW_WIDTH, WINDOW_HEIGHT))
         
     def update(self):
