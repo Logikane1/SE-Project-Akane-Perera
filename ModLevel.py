@@ -3,8 +3,8 @@ import pygame
 from Configuration import *
 
 class Level():
-    def __init__(self, game_window):
-        self.game_window = game_window
+    def __init__(self, displayWindow):
+        self.displayWindow = displayWindow
         
     def update(self):
         pass

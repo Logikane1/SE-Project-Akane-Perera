@@ -2,14 +2,12 @@ import pygame
 from Configuration import *
 from ModLevel import Level
 
-
-
 pygame.init()
 time = pygame.time.Clock()
 
 
-level = Level(game_window)
-game_window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+level = Level()
+displayWindow = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("The Archon")
 
 run = True
