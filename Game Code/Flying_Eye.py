@@ -41,16 +41,12 @@ class Flying_Eye():
         if self.rect.left > WINDOW_WIDTH:
             self.move_right = False
                 
-        self.selectAnimation()
-        
-        
-        self.animationCount += self.animationSpeed
-        if self.animationCount >= len(self.currentAnimation):
+        self.selectAnimation() 
+        self.animationCount += self.animationSpeed  # each times animation is updated, the count is increased by 1 to the next frame
+        if self.animationCount >= len(self.currentAnimation): # after reaching the last frame, it goes back to the original first frame [0]
             self.animationCount = 0
             
         self.image = self.currentAnimation[int(self.animationCount)]
-        
-        self.image = self.eyeSpritesheet.getSprites(self.move_right)[0]
             
             
     def draw(self, displayWindow):
