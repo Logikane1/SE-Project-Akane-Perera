@@ -6,7 +6,7 @@ class Flying_Eye():
         
         flying_eyeImage = pygame.image.load(SPRITESHEET_PATH + "/Enemies/Flying Eye/Fly/Flight.png")
         self.image = flying_eyeImage.subsurface(pygame.Rect(16, 0, 47, 47))
-        self.rect = self.iamge.get_rect(bottomleft = position)
+        self.rect = self.image.get_rect(bottomleft = position)
     
     def update(self, level):
         pass
