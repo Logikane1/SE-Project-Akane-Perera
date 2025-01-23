@@ -103,6 +103,10 @@ class mainCharacter(pygame.sprite.Sprite):
             self.currentState = "IDLE"
             
         self.x_move(level)
+        
+        self.checkEnemyCollisions(level.flying_eyes)
+        
+        
     
     def selectAnimation(self):
         self.animationSpeed = ANIMATIONSPEED_MC_DEFAULT
@@ -122,4 +126,16 @@ class mainCharacter(pygame.sprite.Sprite):
             self.rect.right = WINDOW_WIDTH
         
         self.x_pos = self.rect.centerx
+        
+        
+    def checkEnemyCollisions(self, enemies):
+        collidedSprites = pygame.sprite.spritecollide(self, enemies, False)
+        for enemy in collidedSprites:
+            if self.currentState == "ATTACK":
+                if self.facing_right == True:
+                    if enemy.rect.left < self.rect.right - 30:
+                        enemy.die()
+                else:
+                    if enemy.rect.right > self.rect.left + 30:
+                        enemy.die()
         

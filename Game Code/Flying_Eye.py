@@ -26,13 +26,23 @@ Flying_Eye_AttackSprites = [
     (364, 0, 52, 52)
 ]
 
+Flying_Eye_HitSprites = [
+    (0, 0, 52, 52),
+    (52, 0, 52, 52),
+    (104, 0, 52, 52),
+    (156, 0, 52, 52),
+]
+
+
+
 
 class Flying_Eye(pygame.sprite.Sprite):
     def __init__(self, position, move_right):
         super().__init__()
         
         self.eyeSpritesheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Fly/Flight.png", Flying_EyeSprites)
-        self.attackSpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Attack/Enemy Attack 1.png", Flying_Eye_AttackSprites)
+        self.eye_attackSpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Attack/Enemy Attack 1.png", Flying_Eye_AttackSprites)
+        self.eye_hitSpritesheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Hit/Die.png", Flying_Eye_HitSprites)
         
         self.image = self.eyeSpritesheet.getSprites(move_right)[0]
         self.rect = self.image.get_rect(bottomleft = position)
@@ -98,4 +108,9 @@ class Flying_Eye(pygame.sprite.Sprite):
             self.currentAnimation = self.eyeSpritesheet.getSprites(flipped = self.moving_right)
         elif self.currentState == "ATTACK":
             self.animationSpeed == ANIMATIONSPEED_ATTACK_EYE
-            self.currentAnimation = self.attackSpriteSheet.getSprites(flipped = self.moving_right)
+            self.currentAnimation = self.eye_attackSpriteSheet.getSprites(flipped = self.moving_right)
+            
+    def die(self):
+        if self.currentState != "DYING":
+            self.animationCount = 0
+            self.currentState = "DYING"
