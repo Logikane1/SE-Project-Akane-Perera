@@ -28,12 +28,12 @@ runSprites = [
 ]
 
 attackSprites = [
-    (0, 0, 91, 91),
-    (91, 0, 91, 91),
-    (182, 0, 91, 91),
-    (263, 0, 91, 91),
-    (344, 0, 91, 91),
-    (425, 0, 91, 91)
+    (3, 0, 91, 71),
+    (97, 0, 91, 71),
+    (191, 0, 91, 71),
+    (285, 0, 91, 71),
+    (379, 0, 91, 71),
+    (473, 0, 91, 71)
 ]
 
 
@@ -93,7 +93,7 @@ class mainCharacter():
         elif self.currentState == "RUN":
             self.rect = pygame.Rect(self.x_pos - 26.5, self.y_pos - 53, 53, 53)
         elif self.currentState == "ATTACK":
-            self.rect = pygame.Rect(self.x_pos - 45.5, self.y_pos - 91, 91, 91)
+            self.rect = pygame.Rect(self.x_pos - 45.5, self.y_pos - 71, 91, 71)
 
         
         self.animationIndex += self.animationSpeed
@@ -124,3 +124,4 @@ class mainCharacter():
             self.rect.right = WINDOW_WIDTH
         
         self.x_pos = self.rect.centerx
+        

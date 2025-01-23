@@ -22,6 +22,8 @@ while is_running:
     level.update()
     level.draw()
     
+    
+    
     pygame.display.flip()
     time.tick(60)
     
