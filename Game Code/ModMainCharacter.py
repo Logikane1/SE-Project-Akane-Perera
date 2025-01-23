@@ -41,9 +41,9 @@ attackSprites = [
 class mainCharacter():
     def __init__(self, position, face_right):
         
-        idle_SpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Charcter/Idle/Idle.png", idleSprites)
-        run_SpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Character/Running/Run.png", runSprites)
-        attack_SpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Character/Attack/Attack.png", attackSprites)
+        idle_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Idle/Idle.png", idleSprites)
+        run_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Running/Run.png", runSprites)
+        attack_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Attack/Attack.png", attackSprites)
         
         self.spriteSheets = {
             "IDLE" : idle_SpriteSheet,
@@ -64,7 +64,7 @@ class mainCharacter():
         if self.currentState == "IDLE":
             self.rect = pygame.Rect(self.x_pos - 24, self.y_pos - 48, 48, 48) # since the x_pos and y_pos are at the bottom centre of the rect and we need to get the top left coordiante, we need to minus haf of the x and all of the y to get the top left 
             
-        self.animationIndex += self.aniamtionSpeed
+        self.animationIndex += self.animationSpeed
         if self.animationIndex >= len(self.currentAnimation):
             self.animationIndex = 0
             self.currentState = "IDLE"
