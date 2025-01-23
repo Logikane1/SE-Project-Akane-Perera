@@ -27,9 +27,9 @@ Flying_Eye_AttackSprites = [
 ]
 
 
-class Flying_Eye():
+class Flying_Eye(pygame.sprite.Sprite):
     def __init__(self, position, move_right):
-        
+        super().__init__()
         
         self.eyeSpritesheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Fly/Flight.png", Flying_EyeSprites)
         self.attackSpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Attack/Enemy Attack 1.png", Flying_Eye_AttackSprites)
@@ -53,7 +53,7 @@ class Flying_Eye():
         if self.rect.left > WINDOW_WIDTH:
             self.moving_right = False
             
-        mainCharacterRect = level.mainCharacter.rect
+        mainCharacterRect = level.MainCharacter.sprite.rect
         mainCharacterX = mainCharacterRect.centerx
         
         if self.currentState == "FLY":
@@ -91,9 +91,6 @@ class Flying_Eye():
             
         self.image = self.currentAnimation[int(self.animationCount)]
             
-            
-    def draw(self, displayWindow):
-        displayWindow.blit(self.image, self.rect)
         
     def selectAnimation(self):
         self.animationSpeed = ANIMATIONSPEED_EYE

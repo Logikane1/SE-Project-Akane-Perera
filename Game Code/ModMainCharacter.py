@@ -38,8 +38,9 @@ attackSprites = [
 
 
 
-class mainCharacter():
+class mainCharacter(pygame.sprite.Sprite):
     def __init__(self, position, face_right):
+        super().__init__()
         
         idle_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Idle/Idle.png", idleSprites)
         run_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Running/Run.png", runSprites)
@@ -102,9 +103,6 @@ class mainCharacter():
             self.currentState = "IDLE"
             
         self.x_move(level)
-        
-    def draw(self, displayWindow):
-        displayWindow.blit(self.image, self.rect)
     
     def selectAnimation(self):
         self.animationSpeed = ANIMATIONSPEED_MC_DEFAULT

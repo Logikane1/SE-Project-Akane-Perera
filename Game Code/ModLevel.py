@@ -10,23 +10,24 @@ class Level():
         
         self.background = Background()
         
-        self.mainCharacter = mainCharacter((400, 400), face_right = True)
-        self.flying_eye1 = Flying_Eye((200, 200), move_right = True)
-        self.flying_eye2 = Flying_Eye((300, 380), move_right = False)
+        self.MainCharacter = pygame.sprite.GroupSingle()
+        self.flying_eyes = pygame.sprite.Group()
+        
+        self.MainCharacter.add(mainCharacter((400, 400), face_right = True))
+        self.flying_eyes.add(Flying_Eye((200, 200), move_right = True))
+        self.flying_eyes.add(Flying_Eye((300, 380), move_right = False))
         
         self.displayWindow = displayWindow
         
     def update(self):
-        self.mainCharacter.update(self)
-        self.flying_eye1.update(self)
-        self.flying_eye2.update(self)
+        self.MainCharacter.update(self)
+        self.flying_eyes.update(self)
     
     
     def draw(self):
         self.background.draw(self.displayWindow)
-        self.mainCharacter.draw(self.displayWindow)
-        self.flying_eye1.draw(self.displayWindow)
-        self.flying_eye2.draw(self.displayWindow)
+        self.MainCharacter.draw(self.displayWindow)
+        self.flying_eyes.draw(self.displayWindow)
     
     def run(self):
         self.update()
