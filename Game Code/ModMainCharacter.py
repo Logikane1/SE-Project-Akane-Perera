@@ -65,17 +65,20 @@ class mainCharacter():
         self.previousState = self.currentState
         self.x_direction = 0
         
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            self.x_direction = -1
-            self.facing_right = False
-            self.currentState = "RUN"
-        elif keys[pygame.K_d]:
-            self.x_direction = 1
-            self.facing_right = True
-            self.currentState = "RUN"
-        else:
-            self.currentState = "IDLE"
+        if self.currentState != "ATTACK":
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_e]:
+                self.currentState = "ATTACK"
+            elif keys[pygame.K_a]:
+                self.x_direction = -1
+                self.facing_right = False
+                self.currentState = "RUN"
+            elif keys[pygame.K_d]:
+                self.x_direction = 1
+                self.facing_right = True
+                self.currentState = "RUN"
+            else:
+                self.currentState = "IDLE"
         
         self.selectAnimation()
         
@@ -89,6 +92,8 @@ class mainCharacter():
             self.rect = pygame.Rect(self.x_pos - 24, self.y_pos - 48, 48, 48) # since the x_pos and y_pos are at the bottom centre of the rect and we need to get the top left coordiante, we need to minus haf of the x and all of the y to get the top left 
         elif self.currentState == "RUN":
             self.rect = pygame.Rect(self.x_pos - 26.5, self.y_pos - 53, 53, 53)
+        elif self.currentState == "ATTACK":
+            self.rect = pygame.Rect(self.x_pos - 45.5, self.y_pos - 91, 91, 91)
 
         
         self.animationIndex += self.animationSpeed
