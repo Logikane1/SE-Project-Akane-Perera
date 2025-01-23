@@ -21,6 +21,7 @@ class Flying_Eye():
         
         
         self.eyeSpritesheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Fly/Flight.png", Flying_EyeSprites)
+        self.attackSpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Enemies/Flying Eye/Attack/Enemy Attack 1.png", Flying_EyeSprites)
         
         self.image = self.eyeSpritesheet.getSprites(move_right)[0]
         self.rect = self.image.get_rect(bottomleft = position)
