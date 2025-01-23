@@ -63,10 +63,10 @@ class mainCharacter():
         self.previousState = self.currentState
         
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a or pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             self.facing_right = False
             self.currentState = "RUN"
-        elif keys[pygame.K_d or pygame.K_RIGHT]:
+        elif keys[pygame.K_d]:
             self.facing_right = True
             self.currentState = "RUN"
         else:
