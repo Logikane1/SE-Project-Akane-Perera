@@ -36,22 +36,22 @@ class Flying_Eye():
         
         self.image = self.eyeSpritesheet.getSprites(move_right)[0]
         self.rect = self.image.get_rect(bottomleft = position)
-        self.move_right = move_right
+        self.moving_right = move_right
 
         self.animationCount = 0
         self.currentState = "FLY"
     
     def update(self, level):
-        if self.move_right == False:
+        if self.moving_right == False:
             self.rect.x -= SPEED_FLYINGEYE
         else:
             self.rect.x += SPEED_FLYINGEYE
             
             
         if self.rect.right < 0:   # Makes the Flying Eye turn back when it exits the Window Screen
-            self.move_right = True
+            self.moving_right = True
         if self.rect.left > WINDOW_WIDTH:
-            self.move_right = False
+            self.moving_right = False
             
         mainCharacterRect = level.mainCharacter.rect
         mainCharacterX = mainCharacterRect.centerx
@@ -98,4 +98,7 @@ class Flying_Eye():
     def selectAnimation(self):
         self.animationSpeed = ANIMATIONSPEED_EYE
         if self.currentState == "FLY":
-            self.currentAnimation = self.eyeSpritesheet.getSprites(flipped = self.move_right)
+            self.currentAnimation = self.eyeSpritesheet.getSprites(flipped = self.moving_right)
+        elif self.currentState == "ATTACK":
+            self.animationSpeed == ANIMATIONSPEED_ATTACK_EYE
+            self.currentAnimation = self.attackSpriteSheet.getSprites(flipped = self.moving_right)

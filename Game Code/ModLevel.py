@@ -12,7 +12,7 @@ class Level():
         
         self.mainCharacter = mainCharacter((400, 400), face_right = True)
         self.flying_eye1 = Flying_Eye((200, 200), move_right = True)
-        self.flying_eye2 = Flying_Eye((300, 300), move_right = False)
+        self.flying_eye2 = Flying_Eye((300, 380), move_right = False)
         
         self.displayWindow = displayWindow
         
