@@ -61,7 +61,8 @@ class mainCharacter(pygame.sprite.Sprite):
         self.spriteSheets = {
             "IDLE" : idle_SpriteSheet,
             "RUN" : run_SpriteSheet,
-            "ATTACK" : attack_SpriteSheet
+            "ATTACK" : attack_SpriteSheet,
+            "DIE" : death_SpriteSheet
             }
         
         self.animationIndex = 0
@@ -78,7 +79,7 @@ class mainCharacter(pygame.sprite.Sprite):
         self.previousState = self.currentState
         self.x_direction = 0
         
-        if self.currentState != "ATTACK":
+        if self.currentState != "ATTACK" and self.currentState != "DIE":
             keys = pygame.key.get_pressed()
             if keys[pygame.K_e]:
                 self.currentState = "ATTACK"
@@ -107,12 +108,16 @@ class mainCharacter(pygame.sprite.Sprite):
             self.rect = pygame.Rect(self.x_pos - 26.5, self.y_pos - 53, 53, 53)
         elif self.currentState == "ATTACK":
             self.rect = pygame.Rect(self.x_pos - 45, self.y_pos - 69, 90, 69)
-
+        elif self.currentState == "DIE":
+            self.rect = pygame.Rect(self.x_pos - 24, self.y_pos - 48, 48, 48)
         
         self.animationIndex += self.animationSpeed
         if self.animationIndex >= len(self.currentAnimation):
-            self.animationIndex = 0
-            self.currentState = "IDLE"
+            if self.currentState == "DIE":
+                self.animationIndex = len(self.currentAnimation) - 1 # makes sure the full animation is played when dying
+            else:
+                self.animationIndex = 0
+                self.currentState = "IDLE"
             
         self.x_move(level)
         
