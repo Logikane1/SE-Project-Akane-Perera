@@ -27,7 +27,7 @@ class Flying_Eye():
         self.move_right = move_right
 
         self.animationCount = 0
-        self.enemyState = "FLY"
+        self.currentState = "FLY"
     
     def update(self, level):
         if self.move_right == False:
@@ -54,5 +54,5 @@ class Flying_Eye():
         
     def selectAnimation(self):
         self.animationSpeed = ANIMATIONSPEED_EYE
-        if self.enemyState == "FLY":
+        if self.currentState == "FLY":
             self.currentAnimation = self.eyeSpritesheet.getSprites(flipped = self.move_right)

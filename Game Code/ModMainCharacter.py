@@ -33,7 +33,7 @@ attackSprites = [
     (182, 0, 91, 91),
     (263, 0, 91, 91),
     (344, 0, 91, 91),
-    (425, 0, 91, 91),
+    (425, 0, 91, 91)
 ]
 
 
@@ -45,8 +45,39 @@ class mainCharacter():
         run_SpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Character/Running/Run.png", runSprites)
         attack_SpriteSheet = Spritesheet(SPRITESHEET_PATH + "/Character/Attack/Attack.png", attackSprites)
         
+        self.spriteSheets = {
+            "IDLE" : idle_SpriteSheet,
+            "RUN" : run_SpriteSheet,
+            "ATTACK" : attack_SpriteSheet
+            }
+        
+        self.animationIndex = 0
+        self.facing_right = face_right
+        self.currentState = "IDLE"
+        self.x_pos = position[0]
+        self.y_pos = position[1]
+        
+        
     def update(self, level):
-        pass
+        self.selectAnimation()
+        self.image = self.currentAnimation[int(self.animationIndex)]
+        if self.currentState == "IDLE":
+            self.rect = pygame.Rect(self.x_pos - 24, self.y_pos - 48, 48, 48) # since the x_pos and y_pos are at the bottom centre of the rect and we need to get the top left coordiante, we need to minus haf of the x and all of the y to get the top left 
+            
+        self.animationIndex += self.aniamtionSpeed
+        if self.animationIndex >= len(self.currentAnimation):
+            self.animationIndex = 0
+            self.currentState = "IDLE"
+            
     
     def draw(self, displayWindow):
-        pass
+        displayWindow.blit(self.image, self.rect)
+    
+    def selectAnimation(self):
+        self.animationSpeed = ANIMATIONSPEED_MC_DEFAULT
+        if self.currentState == "IDLE":
+            self.animationSpeed == ANIMATIONSPEED_MC_IDLE
+            
+        spriteSheet = self.spriteSheets[self.currentState]
+        self.currentAnimation = spriteSheet.getSprites(flipped = not self.facing_right)
+        
