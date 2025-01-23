@@ -112,4 +112,10 @@ class mainCharacter():
 
     def x_move(self, level):
         self.rect.centerx += self.x_direction * self.x_velocity
+        
+        if self.rect.left < 0:
+            self.rect.left = 0
+        elif self.rect.right > WINDOW_WIDTH:
+            self.rect.right = WINDOW_WIDTH
+        
         self.x_pos = self.rect.centerx
