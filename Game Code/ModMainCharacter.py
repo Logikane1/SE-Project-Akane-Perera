@@ -59,11 +59,33 @@ class mainCharacter():
         
         
     def update(self, level):
+        
+        self.previousState = self.currentState
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a or pygame.K_LEFT]:
+            self.facing_right = False
+            self.currentState = "RUN"
+        elif keys[pygame.K_d or pygame.K_RIGHT]:
+            self.facing_right = True
+            self.currentState = "RUN"
+        else:
+            self.currentState = "IDLE"
+        
         self.selectAnimation()
+        
+        if self.previousState != self.currentState: # reset animationIndex if the animation is changed 
+            self.animationIndex = 0
+            
+        
         self.image = self.currentAnimation[int(self.animationIndex)]
+        
         if self.currentState == "IDLE":
             self.rect = pygame.Rect(self.x_pos - 24, self.y_pos - 48, 48, 48) # since the x_pos and y_pos are at the bottom centre of the rect and we need to get the top left coordiante, we need to minus haf of the x and all of the y to get the top left 
-            
+        elif self.currentState == "RUN":
+            self.rect = pygame.Rect(self.x_pos - 26.5, self.y_pos - 53, 53, 53)
+
+        
         self.animationIndex += self.animationSpeed
         if self.animationIndex >= len(self.currentAnimation):
             self.animationIndex = 0
