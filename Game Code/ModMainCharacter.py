@@ -54,6 +54,8 @@ class mainCharacter():
         self.animationIndex = 0
         self.facing_right = face_right
         self.currentState = "IDLE"
+        self.x_direction = 0
+        self.x_velocity = MC_SPEED 
         self.x_pos = position[0]
         self.y_pos = position[1]
         
@@ -61,12 +63,15 @@ class mainCharacter():
     def update(self, level):
         
         self.previousState = self.currentState
+        self.x_direction = 0
         
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
+            self.x_direction = -1
             self.facing_right = False
             self.currentState = "RUN"
         elif keys[pygame.K_d]:
+            self.x_direction = 1
             self.facing_right = True
             self.currentState = "RUN"
         else:
@@ -91,7 +96,8 @@ class mainCharacter():
             self.animationIndex = 0
             self.currentState = "IDLE"
             
-    
+        self.x_move(level)
+        
     def draw(self, displayWindow):
         displayWindow.blit(self.image, self.rect)
     
@@ -102,4 +108,8 @@ class mainCharacter():
             
         spriteSheet = self.spriteSheets[self.currentState]
         self.currentAnimation = spriteSheet.getSprites(flipped = not self.facing_right)
-        
+
+
+    def x_move(self, level):
+        self.rect.centerx += self.x_direction * self.x_velocity
+        self.x_pos = self.rect.centerx
