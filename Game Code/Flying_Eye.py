@@ -53,7 +53,7 @@ class Flying_Eye():
         if self.rect.left > WINDOW_WIDTH:
             self.move_right = False
             
-        mainCharacterRect = level.mc.rect
+        mainCharacterRect = level.mainCharacter.rect
         mainCharacterX = mainCharacterRect.centerx
         
         if self.currentState == "FLY":
