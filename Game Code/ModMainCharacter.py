@@ -36,6 +36,17 @@ attackSprites = [
     (450, 0, 90, 69)
 ]
 
+deathSprites = [
+    (0, 0, 48, 48),
+    (48, 0, 48, 48),
+    (96, 0, 48, 48),
+    (144, 0, 48, 48),
+    (192, 0, 48, 48),
+    (240, 0, 48, 48),
+    (288, 0, 48, 48),
+    (336, 0, 48, 48),
+    (384, 0, 48, 48)
+]
 
 
 class mainCharacter(pygame.sprite.Sprite):
@@ -45,6 +56,7 @@ class mainCharacter(pygame.sprite.Sprite):
         idle_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Idle/Idle.png", idleSprites)
         run_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Running/Run.png", runSprites)
         attack_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Attack/Attack.png", attackSprites)
+        death_SpriteSheet = Spritesheet("Main_Assets/Spritesheets/Character/Death/Death.png", deathSprites)
         
         self.spriteSheets = {
             "IDLE" : idle_SpriteSheet,
@@ -127,7 +139,11 @@ class mainCharacter(pygame.sprite.Sprite):
         
         self.x_pos = self.rect.centerx
         
-        
+    def die(self):
+        if self.currentState != "DIE":
+            self.currentState = "DIE"
+            self.animationIndex = 0
+
     def checkEnemyCollisions(self, enemies):
         collidedSprites = pygame.sprite.spritecollide(self, enemies, False)
         for enemy in collidedSprites:
@@ -138,4 +154,12 @@ class mainCharacter(pygame.sprite.Sprite):
                 else:
                     if enemy.rect.right > self.rect.left + 30:
                         enemy.die()
-        
+            else:
+                if enemy.currentState != "DYING":
+                    if self.rect.left < enemy.rect.left:
+                        if self.rect.right > enemy.rect.left + 16:
+                            self.die()
+                    elif self.rect.right > enemy.rect.right:
+                        if self.rect.left < enemy.rect.right - 16:
+                            self.die()
+                            
