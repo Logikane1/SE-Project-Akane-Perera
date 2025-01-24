@@ -14,8 +14,13 @@ class Player(pygame.sprite.Sprite):
         self.direction = vector()
         self.speed = 200
         self.gravity = 1300
+        self.jump = False
+        self.jumpHeight = 900
         
         self.collision_sprites = collision_sprites
+        self.on_surface = {'floor': False, 'left': False, 'right': False}
+        
+        self.display_surface = pygame.display.get_surface()
     
     def input(self):
         keys = pygame.key.get_pressed()
@@ -25,15 +30,44 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_a]:
             inputVector.x -= 1
         self.direction.x = inputVector.normalize().x if inputVector else inputVector.x
+        
+        if keys[pygame.K_SPACE]:
+            self.jump = True
             
     def move(self, dt):
         self.rect.x += self.direction.x * self.speed * dt
         self.collision('horizontal')
         
-        self.direction.y += self.gravity / 2 * dt
-        self.rect.y += self.direction.y * dt
-        self.direction.y += self.gravity / 2 * dt
+        if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])):
+            self.direction.y = 0
+            self.rect.y += self.gravity / 10 * dt
+        else:
+            self.direction.y += self.gravity / 2 * dt
+            self.rect.y += self.direction.y * dt
+            self.direction.y += self.gravity / 2 * dt
+        
         self.collision('vertical')
+        
+        if self.jump:
+            if self.on_surface['floor']:
+                self.direction.y = -self.jumpHeight
+            elif any((self.on_surface['left'], self.on_surface['right'])):
+                self.direction.y = -self.jumpHeight
+            self.direction.x = 1 if self.on_surface['left'] else -1
+            self.jump = False
+        
+        
+    def checkContact(self):
+        floor_rect = pygame.Rect(self.rect.bottomleft,(self.rect.width,2))
+        right_rect = pygame.Rect(self.rect.topright + vector(0, self.rect.height / 4),(2,self.rect.height / 2))
+        left_rect  = pygame.Rect(self.rect.topleft + vector(-2, self.rect.height / 4),(2,self.rect.height / 2))
+        
+        
+        collide_rects = [sprite.rect for sprite in self.collision_sprites]
+        
+        self.on_surface['floor'] = True if floor_rect.collidelist(collide_rects) >= 0 else False
+        self.on_surface['right'] = True if right_rect.collidelist(collide_rects) >= 0 else False
+        self.on_surface['left']  = True if left_rect.collidelist(collide_rects) >= 0 else False
         
     def collision(self, axis):
         for sprite in self.collision_sprites:
@@ -56,3 +90,4 @@ class Player(pygame.sprite.Sprite):
         self.previousRect = self.rect.copy()
         self.input()
         self.move(dt)
+        self.checkContact()

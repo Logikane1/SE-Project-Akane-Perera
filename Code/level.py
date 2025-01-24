@@ -22,6 +22,6 @@ class Level:
                 
                 
     def run(self, dt):
-        self.allSprites.update(dt)
         self.displayWindow.fill('black')
+        self.allSprites.update(dt)
         self.allSprites.draw(self.displayWindow)
