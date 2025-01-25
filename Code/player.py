@@ -21,18 +21,19 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         
-        self.timer = {
-            'name': Timer()
+        self.timers = {
+            'wall jump': Timer(300)
         }
     
     def input(self):
         keys = pygame.key.get_pressed()
         inputVector = vector(0,0)
-        if keys[pygame.K_d]:
-            inputVector.x += 1
-        if keys[pygame.K_a]:
-            inputVector.x -= 1
-        self.direction.x = inputVector.normalize().x if inputVector else inputVector.x
+        if not self.timers['wall jump'].active:
+            if keys[pygame.K_d]:
+                inputVector.x += 1
+            if keys[pygame.K_a]:
+                inputVector.x -= 1
+            self.direction.x = inputVector.normalize().x if inputVector else inputVector.x
         
         if keys[pygame.K_SPACE]:
             self.jump = True
@@ -55,11 +56,12 @@ class Player(pygame.sprite.Sprite):
             if self.on_surface['floor']:
                 self.direction.y = -self.jumpHeight
             elif any((self.on_surface['left'], self.on_surface['right'])):
+                self.timers['wall jump'].activate()
                 self.direction.y = -self.jumpHeight
-            self.direction.x = 1 if self.on_surface['left'] else -1
+                self.direction.x = 1 if self.on_surface['left'] else -1
             self.jump = False
         
-        
+    
     def checkContact(self):
         floor_rect = pygame.Rect(self.rect.bottomleft,(self.rect.width,2))
         right_rect = pygame.Rect(self.rect.topright + vector(0, self.rect.height / 4),(2,self.rect.height / 2))
@@ -88,9 +90,15 @@ class Player(pygame.sprite.Sprite):
                     if self.rect.bottom >= sprite.rect.top and self.previousRect.bottom <= sprite.previousRect.top:
                         self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
+                    
+    def update_timers(self):
+        for timer in self.timers.values():
+            timer.update()
+    
                 
     def update(self, dt):
         self.previousRect = self.rect.copy()
+        self.update_timers()
         self.input()
         self.move(dt)
         self.checkContact()
