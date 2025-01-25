@@ -17,6 +17,8 @@ class Game:
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
+            max_dt = 0.005
+            dt = min(dt, max_dt)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
