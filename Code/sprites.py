@@ -12,7 +12,10 @@ class MovingSprite(Sprite):
     def __init__(self, groups, start_position, end_position, move_dir, speed):
         surf = pygame.Surface((200, 50))
         super().__init__(start_position, surf, groups)
-        self.rect.center = start_position
+        if move_dir == 'x':
+            self.rect.midleft = start_position
+        else:
+            self.rect.midtop = start_position
         self.start_position = start_position
         self.end_position = end_position
         
