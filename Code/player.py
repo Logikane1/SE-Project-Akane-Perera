@@ -1,4 +1,5 @@
 from gameSettings import *
+from gameTimer import Timer
 
 
 class Player(pygame.sprite.Sprite):
@@ -20,7 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         
-        self.display_surface = pygame.display.get_surface()
+        self.timer = {
+            'name': Timer()
+        }
     
     def input(self):
         keys = pygame.key.get_pressed()
