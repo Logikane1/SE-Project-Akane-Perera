@@ -1,13 +1,13 @@
 from gameSettings import *
 from gameTimer import Timer
+from os.path import join
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, semicollision_sprites):
         super().__init__(groups)
-        self.image = pygame.Surface((39, 49))
-        self.image.fill('red')
         
+        self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0.png'))
         
         self.rect = self.image.get_frect(topleft = pos)
         self.previousRect = self.rect.copy
