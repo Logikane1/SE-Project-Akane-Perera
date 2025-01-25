@@ -117,7 +117,8 @@ class Player(pygame.sprite.Sprite):
                 if sprite.rect.colliderect(self.rect):
                     if self.rect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= sprite.previousRect.top:
                         self.rect.bottom = sprite.rect.top
-                        self.direction.y = 0
+                        if self.direction.y > 0:
+                            self.direction.y = 0
                     
     def update_timers(self):
         for timer in self.timers.values():
