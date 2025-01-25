@@ -3,7 +3,7 @@ from gameTimer import Timer
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, semicollision_sprites):
         super().__init__(groups)
         self.image = pygame.Surface((39, 49))
         self.image.fill('red')
@@ -19,6 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.jumpHeight = 900
         
         self.collision_sprites = collision_sprites
+        self.semicollision_sprites = semicollision_sprites
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         self.platform = None
         
@@ -53,6 +54,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.y += self.gravity / 2 * dt
         
         self.collision('vertical')
+        self.semiCollision()
         
         if self.jump:
             if self.on_surface['floor']:
@@ -75,39 +77,48 @@ class Player(pygame.sprite.Sprite):
         left_rect  = pygame.Rect(self.rect.topleft + vector(-2, self.rect.height / 4),(2,self.rect.height / 2))
         
         collide_rects = [sprite.rect for sprite in self.collision_sprites]
+        semicollide_rects = [sprite.rect for sprite in self.semicollision_sprites]
         
-        self.on_surface['floor'] = True if floor_rect.collidelist(collide_rects) >= 0 else False
+        self.on_surface['floor'] = True if floor_rect.collidelist(collide_rects) >= 0 or floor_rect.collidelist(semicollide_rects) >= 0 and self.direction.y >= 0 else False
         self.on_surface['right'] = True if right_rect.collidelist(collide_rects) >= 0 else False
         self.on_surface['left']  = True if left_rect.collidelist(collide_rects) >= 0 else False
         
         self.platform = None
-        for sprite in [sprite for sprite in self.collision_sprites.sprites() if hasattr(sprite, 'moving')]:
+        sprites = self.collision_sprites.sprites() + self.semicollision_sprites.sprites()
+        for sprite in [sprite for sprite in sprites if hasattr(sprite, 'moving')]:
             if sprite.rect.colliderect(floor_rect):
                 self.platform = sprite
             
-        
     def collision(self, axis):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.rect): # checks the collision between the sprite rectangle and the rectangle of the player
                 if axis == 'horizontal':
-                    if self.rect.left <= sprite.rect.right and self.previousRect.left >= sprite.previousRect.right:
+                    if self.rect.left <= sprite.rect.right and int(self.previousRect.left) >= sprite.previousRect.right:
                         self.rect.left = sprite.rect.right
                         
-                    if self.rect.right >= sprite.rect.left and self.previousRect.right <= sprite.previousRect.left:
+                    if self.rect.right >= sprite.rect.left and int(self.previousRect.right) <= sprite.previousRect.left:
                         self.rect.right = sprite.rect.left
                 else:  # vertical
-                    if self.rect.top <= sprite.rect.bottom and self.previousRect.top >= sprite.previousRect.bottom:
+                    if self.rect.top <= sprite.rect.bottom and int(self.previousRect.top) >= sprite.previousRect.bottom:
                         self.rect.top = sprite.rect.bottom
+                        if hasattr(sprite, 'moving'):
+                            self.rect.top += 6
                         
-                    if self.rect.bottom >= sprite.rect.top and self.previousRect.bottom <= sprite.previousRect.top:
+                    if self.rect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= sprite.previousRect.top:
                         self.rect.bottom = sprite.rect.top
+                    self.direction.y = 0
+                    
+    def semiCollision(self):
+        for sprite in self.semicollision_sprites:
+            if sprite.rect.colliderect(self.rect):
+                if self.rect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= sprite.previousRect.top:
+                    self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
                     
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
     
-                
     def update(self, dt):
         self.previousRect = self.rect.copy()
         self.update_timers()

@@ -9,6 +9,7 @@ class Level:
         #groups
         self.allSprites = pygame.sprite.Group()
         self.collisionSprites = pygame.sprite.Group()
+        self.semicollisionSprites = pygame.sprite.Group()
         
         self.setup(tmx_map)
         
@@ -20,7 +21,7 @@ class Level:
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
-                Player((obj.x, obj.y), self.allSprites, self.collisionSprites)
+                Player((obj.x, obj.y), self.allSprites, self.collisionSprites, self.semicollisionSprites)
                 
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
@@ -34,7 +35,7 @@ class Level:
                     start_position = (obj.x + obj.width / 2, obj.y)
                     end_position = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
-                MovingSprite((self.allSprites, self.collisionSprites), start_position, end_position, move_dir, speed)
+                MovingSprite((self.allSprites, self.semicollisionSprites), start_position, end_position, move_dir, speed)
                 
                 
                 
