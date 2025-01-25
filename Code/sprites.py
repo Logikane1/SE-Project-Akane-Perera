@@ -20,6 +20,7 @@ class MovingSprite(Sprite):
         self.end_position = end_position
         
         #movement
+        self.moving = True
         self.speed = speed
         self.direction = vector(1,0) if move_dir == 'x' else vector(0,1)
         self.move_dir = move_dir
