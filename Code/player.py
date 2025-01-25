@@ -22,7 +22,8 @@ class Player(pygame.sprite.Sprite):
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         
         self.timers = {
-            'wall jump': Timer(300)
+            'wall jump': Timer(300),
+            'wall slide': Timer(200)
         }
     
     def input(self):
@@ -42,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.direction.x * self.speed * dt
         self.collision('horizontal')
         
-        if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])):
+        if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall slide'].active:
             self.direction.y = 0
             self.rect.y += self.gravity / 10 * dt
         else:
@@ -55,7 +56,8 @@ class Player(pygame.sprite.Sprite):
         if self.jump:
             if self.on_surface['floor']:
                 self.direction.y = -self.jumpHeight
-            elif any((self.on_surface['left'], self.on_surface['right'])):
+                self.timers['wall slide'].activate()
+            elif any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall slide'].active:
                 self.timers['wall jump'].activate()
                 self.direction.y = -self.jumpHeight
                 self.direction.x = 1 if self.on_surface['left'] else -1
@@ -102,3 +104,4 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.move(dt)
         self.checkContact()
+        print(self.timers['wall slide'].active)
