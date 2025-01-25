@@ -104,4 +104,3 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.move(dt)
         self.checkContact()
-        print(self.timers['wall slide'].active)
