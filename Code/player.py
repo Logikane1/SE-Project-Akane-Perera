@@ -8,6 +8,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         
         self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0.png'))
+        self.z = Z_LAYERS['main']
         
         self.rect = self.image.get_frect(topleft = pos)
         self.hitboxRect = self.rect.inflate(-76, -36)
