@@ -10,7 +10,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0.png'))
         
         self.rect = self.image.get_frect(topleft = pos)
-        self.previousRect = self.rect.copy
+        self.hitboxRect = self.rect.inflate(-76, -36)
+        self.previousRect = self.hitboxRect.copy()
         
         self.direction = vector()
         self.speed = 200
@@ -45,39 +46,40 @@ class Player(pygame.sprite.Sprite):
             self.jump = True
             
     def move(self, dt):
-        self.rect.x += self.direction.x * self.speed * dt
+        self.hitboxRect.x += self.direction.x * self.speed * dt
         self.collision('horizontal')
         
         if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall slide'].active:
             self.direction.y = 0
-            self.rect.y += self.gravity / 10 * dt
+            self.hitboxRect.y += self.gravity / 10 * dt
         else:
             self.direction.y += self.gravity / 2 * dt
-            self.rect.y += self.direction.y * dt
+            self.hitboxRect.y += self.direction.y * dt
             self.direction.y += self.gravity / 2 * dt
-        
-        self.collision('vertical')
-        self.semiCollision()
         
         if self.jump:
             if self.on_surface['floor']:
                 self.direction.y = -self.jumpHeight
                 self.timers['wall slide'].activate()
-                self.rect.bottom -= 1
+                self.hitboxRect.bottom -= 1
             elif any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall slide'].active:
                 self.timers['wall jump'].activate()
                 self.direction.y = -self.jumpHeight
                 self.direction.x = 1 if self.on_surface['left'] else -1
             self.jump = False
+        
+        self.collision('vertical')
+        self.semiCollision()    
+        self.rect.center = self.hitboxRect.center
             
     def platformMoving(self, dt):
         if self.platform:
-            self.rect.topleft += self.platform.direction * self.platform.speed * dt # makes it so player moves along with a moving platform its standing on
+            self.hitboxRect.topleft += self.platform.direction * self.platform.speed * dt # makes it so player moves along with a moving platform its standing on
     
     def checkContact(self):
-        floor_rect = pygame.Rect(self.rect.bottomleft,(self.rect.width,2))
-        right_rect = pygame.Rect(self.rect.topright + vector(0, self.rect.height / 4),(2,self.rect.height / 2))
-        left_rect  = pygame.Rect(self.rect.topleft + vector(-2, self.rect.height / 4),(2,self.rect.height / 2))
+        floor_rect = pygame.Rect(self.hitboxRect.bottomleft,(self.hitboxRect.width,2))
+        right_rect = pygame.Rect(self.hitboxRect.topright + vector(0, self.hitboxRect.height / 4),(2,self.hitboxRect.height / 2))
+        left_rect  = pygame.Rect(self.hitboxRect.topleft + vector(-2, self.hitboxRect.height / 4),(2,self.hitboxRect.height / 2))
         
         collide_rects = [sprite.rect for sprite in self.collision_sprites]
         semicollide_rects = [sprite.rect for sprite in self.semicollision_sprites]
@@ -94,29 +96,29 @@ class Player(pygame.sprite.Sprite):
             
     def collision(self, axis):
         for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.rect): # checks the collision between the sprite rectangle and the rectangle of the player
+            if sprite.rect.colliderect(self.hitboxRect): # checks the collision between the sprite rectangle and the rectangle of the player
                 if axis == 'horizontal':
-                    if self.rect.left <= sprite.rect.right and self.previousRect.left >= sprite.previousRect.right:
-                        self.rect.left = sprite.rect.right
+                    if self.hitboxRect.left <= sprite.rect.right and self.previousRect.left >= sprite.previousRect.right:
+                        self.hitboxRect.left = sprite.rect.right
                         
-                    if self.rect.right >= sprite.rect.left and self.previousRect.right <= sprite.previousRect.left:
-                        self.rect.right = sprite.rect.left
+                    if self.hitboxRect.right >= sprite.rect.left and self.previousRect.right <= sprite.previousRect.left:
+                        self.hitboxRect.right = sprite.rect.left
                 else:  # vertical
-                    if self.rect.top <= sprite.rect.bottom and self.previousRect.top >= sprite.previousRect.bottom:
-                        self.rect.top = sprite.rect.bottom
+                    if self.hitboxRect.top <= sprite.rect.bottom and self.previousRect.top >= sprite.previousRect.bottom:
+                        self.hitboxRect.top = sprite.rect.bottom
                         if hasattr(sprite, 'moving'):
-                            self.rect.top += 6
+                            self.hitboxRect.top += 6
                         
-                    if self.rect.bottom >= sprite.rect.top and self.previousRect.bottom <= sprite.previousRect.top:
-                        self.rect.bottom = sprite.rect.top
+                    if self.hitboxRect.bottom >= sprite.rect.top and self.previousRect.bottom <= sprite.previousRect.top:
+                        self.hitboxRect.bottom = sprite.rect.top
                     self.direction.y = 0
                     
     def semiCollision(self):
         if not self.timers['platform fall'].active:
             for sprite in self.semicollision_sprites:
-                if sprite.rect.colliderect(self.rect):
-                    if self.rect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= sprite.previousRect.top:
-                        self.rect.bottom = sprite.rect.top
+                if sprite.rect.colliderect(self.hitboxRect):
+                    if self.hitboxRect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= sprite.previousRect.top:
+                        self.hitboxRect.bottom = sprite.rect.top
                         if self.direction.y > 0:
                             self.direction.y = 0
                     
@@ -125,7 +127,7 @@ class Player(pygame.sprite.Sprite):
             timer.update()
     
     def update(self, dt):
-        self.previousRect = self.rect.copy()
+        self.previousRect = self.hitboxRect.copy()
         self.update_timers()
         self.input()
         self.move(dt)

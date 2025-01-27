@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1.1" orientation="orthogonal" renderorder="right-down" width="70" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="27">
+<map version="1.10" tiledversion="1.11.1.1" orientation="orthogonal" renderorder="right-down" width="70" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="29">
  <tileset firstgid="1" source="../Tilsets/outside.tsx"/>
  <tileset firstgid="49" source="../Tilsets/inside.tsx"/>
  <tileset firstgid="145" source="../Tilsets/platforms.tsx"/>
  <tileset firstgid="153" source="../Tilsets/editor_paths.tsx"/>
+ <tileset firstgid="159" source="../Tilsets/0.tsx"/>
  <layer id="1" name="Terrain" width="70" height="20">
   <data encoding="csv">
 52,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -44,5 +45,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="2" name="Objects"/>
+ <objectgroup id="2" name="Objects">
+  <object id="28" name="Player" gid="159" x="752.615" y="552" width="64" height="64"/>
+ </objectgroup>
 </map>
