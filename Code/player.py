@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.timers = {
             'wall jump': Timer(300),
             'wall slide': Timer(200),
-            'platform fall': Timer(250)
+            'platform fall': Timer(100)
         }
     
     def input(self):
