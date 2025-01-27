@@ -19,9 +19,15 @@ class Level:
         for layer in ['Background', 'Terrain', 'Platforms', 'Foreground']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
                 groups = [self.allSprites]
+                
                 if layer == 'Terrain': groups.append(self.collisionSprites)
                 if layer == 'Platforms': groups.append(self.semicollisionSprites)
-                z = Z_LAYERS['bg tiles']
+                
+                match layer:
+                    case 'Background': z = Z_LAYERS['bg tiles']
+                    case 'Foreground': z = Z_LAYERS['fg']
+                    case _: z = Z_LAYERS['main']
+                    
                 Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, groups, z)
             
         #objects
