@@ -98,18 +98,18 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitboxRect): # checks the collision between the sprite rectangle and the rectangle of the player
                 if axis == 'horizontal':
-                    if self.hitboxRect.left <= sprite.rect.right and self.previousRect.left >= sprite.previousRect.right:
+                    if self.hitboxRect.left <= sprite.rect.right and int(self.previousRect.left) >= int(sprite.previousRect.right):
                         self.hitboxRect.left = sprite.rect.right
                         
-                    if self.hitboxRect.right >= sprite.rect.left and self.previousRect.right <= sprite.previousRect.left:
+                    if self.hitboxRect.right >= sprite.rect.left and int(self.previousRect.right) <= int(sprite.previousRect.left):
                         self.hitboxRect.right = sprite.rect.left
                 else:  # vertical
-                    if self.hitboxRect.top <= sprite.rect.bottom and self.previousRect.top >= sprite.previousRect.bottom:
+                    if self.hitboxRect.top <= sprite.rect.bottom and int(self.previousRect.top) >= int(sprite.previousRect.bottom):
                         self.hitboxRect.top = sprite.rect.bottom
                         if hasattr(sprite, 'moving'):
                             self.hitboxRect.top += 6
                         
-                    if self.hitboxRect.bottom >= sprite.rect.top and self.previousRect.bottom <= sprite.previousRect.top:
+                    if self.hitboxRect.bottom >= sprite.rect.top and int(self.previousRect.bottom) <= int(sprite.previousRect.top):
                         self.hitboxRect.bottom = sprite.rect.top
                     self.direction.y = 0
                     
