@@ -2,11 +2,11 @@ from gameSettings import *
 from os import walk
 from os.path import join
 
-def importImage(*path, alpha = True, format = 'png'):
+def importImage(*path, alpha = True, format = 'png'): # normal importing
     full_path = join(*path) + f' .{format}'
     return pygame.image.load(full_path).convert_alpha() if alpha else pygame.image.load(full_path).convert()
 
-def importFolder(*path):
+def importFolder(*path): # this imports all the images in a folder and places them in a list
     frames = []
     for folder_path, subfolders, image_names in walk(join(*path)):
         for image_name in sorted(image_names, key = lambda name: int(name.split('.')[0])):
@@ -14,7 +14,7 @@ def importFolder(*path):
             frames.append(pygame.image.load(full_path).convert_alpha())
     return frames
 
-def importFolderDict(*path):
+def importFolderDict(*path): # same function as importFolder but now places in a dictionary (Name as file as key and Surface as a value)
     frame_dict = {}
     for folder_path, _, image_names in walk(join(*path)):
         for image_name in image_names:
@@ -23,7 +23,7 @@ def importFolderDict(*path):
             frame_dict[image_names.split('.')[0]] = surface
     return frame_dict
 
-def importSubfolder(*path):
+def importSubfolder(*path): # used for importing subfolders such as folders in the player, creates a dict and the keys are going to be the names and the values are a list of surfaces
     frame_dict = {}
     for _, sub_folders, __ in walk(join(*path)):
         if sub_folders:

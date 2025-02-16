@@ -4,7 +4,7 @@ from player import Player
 from groups import AllSprites
 
 class Level:
-    def __init__(self, tmx_map):
+    def __init__(self, tmx_map, level_frames):
         self.displayWindow = pygame.display.get_surface()
         
         #groups
@@ -12,9 +12,9 @@ class Level:
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
         
-        self.setup(tmx_map)
+        self.setup(tmx_map, level_frames)
         
-    def setup(self, tmx_map):
+    def setup(self, tmx_map, level_frames):
         #tiles
         for layer in ['Background', 'Terrain', 'Platforms', 'Foreground']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
@@ -34,7 +34,8 @@ class Level:
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
                 self.player = Player((obj.x, obj.y), self.allSprites, self.collisionSprites, self.semicollisionSprites)
-                
+            else:
+                if obj.name in ( )
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == 'helicopter':

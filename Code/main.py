@@ -2,6 +2,7 @@ from gameSettings import *
 from level import Level
 from pytmx.util_pygame import load_pygame
 from os.path import join
+from support import *
 
 class Game:
     def __init__(self):
@@ -9,10 +10,17 @@ class Game:
         self.displayWindow = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("THE ARCHON")
         self.clock = pygame.time.Clock()
+        self.importAssets()
         
         self.tmx_maps = {0: load_pygame(join('Data', 'Levels', 'omni.tmx'))}
         
-        self.currentStage = Level(self.tmx_maps[0])
+        self.currentStage = Level(self.tmx_maps[0], self.level_frames)
+        
+    def importAssets(self):
+        self.level_frames = {
+            'dark_tree' : importFolder('Graphics', 'level', 'trees', 'dark_tree')
+        }
+        print(self.level_frames)
         
     def run(self):
         while True:
