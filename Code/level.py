@@ -34,6 +34,9 @@ class Level:
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
                 self.player = Player((obj.x, obj.y), self.allSprites, self.collisionSprites, self.semicollisionSprites)
+            else:
+                if obj.name in ('barrel', 'crate'):
+                    Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == 'helicopter':
