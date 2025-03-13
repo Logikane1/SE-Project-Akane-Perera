@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
         self.gravity = 1300
         self.jump = False
-        self.jumpHeight = 900
+        self.jumpHeight = 700
         
         self.collision_sprites = collision_sprites
         self.semicollision_sprites = semicollision_sprites
