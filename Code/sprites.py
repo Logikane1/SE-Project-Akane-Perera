@@ -12,6 +12,14 @@ class AnimatedSprite(Sprite):
     def __init__(self, pos, frames, groups, z = Z_LAYERS['main'], animation_speed = ANIMATION_SPEED):
         self.frames, self.frame_index = frames, 0 # self.frames is going to be a list of surfaces, self.frameindex will allow to pick 1 surface
         super().__init__(pos, self.frames[self.frame_index], groups, z)
+        self.animation_speed = animation_speed
+        
+    def animate(self, dt):
+        self.frame_index += self.animation_speed * dt # this is to make sure the animations are playing at the same speed on every computer
+        self.image = self.frames[int(self.frame_index % len(self.frames))] # after the first line self.frameindex will be a floating point so it needs to be int. Added len(self.frames_index) to limit sel.frame_index so it doesn't exceed self.frames
+    
+    def update(self, dt):
+        self.animate(dt)
         
 class MovingSprite(Sprite):
     def __init__(self, groups, start_position, end_position, move_dir, speed):
