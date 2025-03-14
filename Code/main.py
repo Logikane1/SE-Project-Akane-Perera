@@ -18,7 +18,7 @@ class Game:
         
     def importAssets(self):
         self.level_frames = {
-            'dark_tree' : importFolder('Graphics', 'level', 'trees', 'dark_tree')
+            'floor_spike' : importFolder('Graphics', 'enemies', 'floor_spikes')
         }
         print(self.level_frames)
         

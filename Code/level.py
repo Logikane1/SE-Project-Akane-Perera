@@ -37,6 +37,10 @@ class Level:
             else:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
+                else:
+                    if 'tree' not in obj.name:
+                        frames = level_frames[obj.name]
+                        print(frames)
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == 'helicopter':
