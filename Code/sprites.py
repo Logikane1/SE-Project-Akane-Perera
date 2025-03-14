@@ -8,6 +8,11 @@ class Sprite(pygame.sprite.Sprite):
         self.previousRect = self.rect.copy()
         self.z = z
         
+class AnimatedSprite(Sprite):
+    def __init__(self, pos, frames, groups, z = Z_LAYERS['main'], animation_speed = ANIMATION_SPEED):
+        self.frames, self.frame_index = frames, 0 # self.frames is going to be a list of surfaces, self.frameindex will allow to pick 1 surface
+        super().__init__(pos, self.frames[self.frame_index], groups, z)
+        
 class MovingSprite(Sprite):
     def __init__(self, groups, start_position, end_position, move_dir, speed):
         surf = pygame.Surface((200, 50))
