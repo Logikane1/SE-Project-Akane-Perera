@@ -37,6 +37,11 @@ class Level:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
+                    #frames
+                    frames = level_frames[obj.name]
+                    #groups
+                    
+                    #z index
                     if obj.name == 'floor_spike':
                         AnimatedSprite((obj.x, obj.y), level_frames[obj.name], self.allSprites,)
                         
