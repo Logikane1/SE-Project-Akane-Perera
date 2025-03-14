@@ -37,9 +37,8 @@ class Level:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
-                    if 'tree' not in obj.name:
-                        frames = level_frames[obj.name]
-                        AnimatedSprite((obj.x, obj.y), frames, self.allSprites,)
+                    if obj.name == 'floor_spike':
+                        AnimatedSprite((obj.x, obj.y), level_frames[obj.name], self.allSprites,)
                         
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
