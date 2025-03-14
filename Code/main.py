@@ -18,9 +18,9 @@ class Game:
         
     def importAssets(self):
         self.level_frames = {
-            'floor_spike' : importFolder('Graphics', 'enemies', 'floor_spikes')
+            'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
+            'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
         }
-        print(self.level_frames)
         
     def run(self):
         while True:

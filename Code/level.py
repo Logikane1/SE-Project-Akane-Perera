@@ -38,11 +38,11 @@ class Level:
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
                     #frames
-                    frames = level_frames[obj.name]
+
                     #groups
                     
                     #z index
-                    if obj.name == 'floor_spike':
+                    if obj.name in ('floor_spikes', 'fire_trap'):
                         AnimatedSprite((obj.x, obj.y), level_frames[obj.name], self.allSprites,)
                         
         #moving objects
