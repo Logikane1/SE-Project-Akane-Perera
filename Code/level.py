@@ -1,8 +1,7 @@
 from gameSettings import *
-from sprites import Sprite, MovingSprite
+from sprites import Sprite, AnimatedSprite, MovingSprite
 from player import Player
 from groups import AllSprites
-
 class Level:
     def __init__(self, tmx_map, level_frames):
         self.displayWindow = pygame.display.get_surface()
@@ -40,7 +39,8 @@ class Level:
                 else:
                     if 'tree' not in obj.name:
                         frames = level_frames[obj.name]
-                        print(frames)
+                        AnimatedSprite((obj.x, obj.y), frames, self.allSprites,)
+                        
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == 'helicopter':
