@@ -21,7 +21,7 @@ class Game:
             'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
             'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
         }
-        
+
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
