@@ -3,7 +3,7 @@ from os import walk
 from os.path import join
 
 def importImage(*path, alpha = True, format = 'png'): # normal importing
-    full_path = join(*path) + f' .{format}'
+    full_path = join(*path) + f'.{format}'
     return pygame.image.load(full_path).convert_alpha() if alpha else pygame.image.load(full_path).convert()
 
 def importFolder(*path): # this imports all the images in a folder and places them in a list
@@ -18,7 +18,7 @@ def importFolderDict(*path): # same function as importFolder but now places in a
     frame_dict = {}
     for folder_path, _, image_names in walk(join(*path)):
         for image_name in image_names:
-            full_path = join(folder_path, image_names)
+            full_path = join(folder_path, image_name)
             surface = pygame.image.load(full_path).convert_alpha()
             frame_dict[image_names.split('.')[0]] = surface
     return frame_dict
