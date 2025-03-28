@@ -37,7 +37,8 @@ class Level:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
-                    if obj.name in ('floor_spikes', 'fire_trap'):
+                    
+                    if obj.name in ('floor_spikes', 'fire_trap', 'dark_tree', 'dark_tree_bg'):
                         AnimatedSprite((obj.x, obj.y), level_frames[obj.name], self.allSprites)
                         
         #moving objects
@@ -57,6 +58,6 @@ class Level:
                 
                 
     def run(self, dt):
-        self.displayWindow.fill('black')
+        self.displayWindow.fill('blue')
         self.allSprites.update(dt)
         self.allSprites.draw(self.player.hitboxRect.center)
