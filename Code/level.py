@@ -37,8 +37,8 @@ class Level:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
-                    frames = level_frames[obj.name]
                     
+                    frames = level_frames[obj.name]
                     AnimatedSprite((obj.x, obj.y), frames, self.allSprites)
                         
         #moving objects
