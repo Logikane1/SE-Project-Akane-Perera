@@ -40,9 +40,11 @@ class Level:
                     frames = level_frames[obj.name] if not 'dark_tree' in obj.name else level_frames['dark_trees'][obj.name]
                     if obj.name == 'floor_spikes' and obj.properties['inverted']:
                         frames = [pygame.transform.flip(frame, False, True) for frame in frames]
-                    
-                    
-                    AnimatedSprite((obj.x, obj.y), frames, self.allSprites)
+                        
+                    groups = [self.allSprites]
+                    if obj.name in('dark_tree'): groups.append(self.semicollisionSprites)
+                        
+                    AnimatedSprite((obj.x, obj.y), frames, groups)
                         
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
@@ -57,8 +59,6 @@ class Level:
                     end_position = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
                 MovingSprite((self.allSprites, self.semicollisionSprites), start_position, end_position, move_dir, speed)
-                
-                
                 
     def run(self, dt):
         self.displayWindow.fill('blue')
