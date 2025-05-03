@@ -113,7 +113,6 @@
   <object id="33" name="crate" gid="165" x="905" y="578" width="50" height="36"/>
   <object id="37" name="floor_spikes" gid="166" x="985.251" y="577.892" width="63" height="64"/>
   <object id="39" name="fire_trap" gid="167" x="404.005" y="575.603" width="32" height="64"/>
-  <object id="40" gid="167" x="436.049" y="511.515" width="32" height="64"/>
   <object id="45" name="dark_tree" gid="168" x="832.086" y="320.352" width="128" height="128"/>
   <object id="46" name="dark_tree_bg" gid="169" x="510.502" y="770.111" width="128" height="128"/>
   <object id="48" name="Player" gid="170" x="674" y="589.314" width="110" height="96"/>
