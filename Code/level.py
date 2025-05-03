@@ -38,6 +38,8 @@ class Level:
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))
                 else:
                     frames = level_frames[obj.name] if not 'dark_tree' in obj.name else level_frames['dark_trees'][obj.name]
+                    if obj.name == 'floor_spikes' and obj.properties['inverted']:
+                        frames = [pygame.transform.flip(frame, False, True) for frame in frames]
                     
                     
                     AnimatedSprite((obj.x, obj.y), frames, self.allSprites)
