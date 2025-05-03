@@ -2,6 +2,7 @@ from gameSettings import *
 from sprites import Sprite, AnimatedSprite, MovingSprite
 from player import Player
 from groups import AllSprites
+from random import uniform
 class Level:
     def __init__(self, tmx_map, level_frames):
         self.displayWindow = pygame.display.get_surface()
@@ -10,6 +11,7 @@ class Level:
         self.allSprites = AllSprites()
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
+        self.damageSprites = pygame.sprite.Group()
         
         self.setup(tmx_map, level_frames)
         
@@ -43,8 +45,13 @@ class Level:
                         
                     groups = [self.allSprites]
                     if obj.name in('dark_tree'): groups.append(self.semicollisionSprites)
+                    if obj.name in('fire_trap', 'floor_spikes'): groups.append(self.damageSprites)
+                    
+                    z = Z_LAYERS['main'] if not 'bg' in obj.name else Z_LAYERS['bg details']
+                    
+                    animation_speed = ANIMATION_SPEED if not 'dark_tree' in obj.name else ANIMATION_SPEED + uniform(-1, 1)
                         
-                    AnimatedSprite((obj.x, obj.y), frames, groups)
+                    AnimatedSprite((obj.x, obj.y), frames, groups, z, animation_speed)
                         
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
