@@ -30,7 +30,12 @@ class Level:
                     case _: z = Z_LAYERS['main']
                     
                 Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, groups, z)
-            
+        
+        #bg details
+        for obj in tmx_map.get_layer_by_name('BG details'):
+            if obj.name == 'static':
+                Sprite((obj.x, obj.y), obj.image, self.allSprites, z = Z_LAYERS['bg tiles'])
+        
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
