@@ -35,7 +35,8 @@ class Level:
         for obj in tmx_map.get_layer_by_name('BG details'):
             if obj.name == 'static':
                 Sprite((obj.x, obj.y), obj.image, self.allSprites, z = Z_LAYERS['bg tiles'])
-        
+            else:
+                AnimatedSprite((obj.x, obj.y), level_frames[obj.name], self.allSprites, z = Z_LAYERS['bg tiles'], animation_speed = ANIMATION_SPEED)
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
@@ -73,6 +74,6 @@ class Level:
                 MovingSprite((self.allSprites, self.semicollisionSprites), start_position, end_position, move_dir, speed)
                 
     def run(self, dt):
-        self.displayWindow.fill('blue')
+        self.displayWindow.fill('black')
         self.allSprites.update(dt)
         self.allSprites.draw(self.player.hitboxRect.center)
