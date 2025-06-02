@@ -40,7 +40,13 @@ class Level:
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == "Player":
-                self.player = Player((obj.x, obj.y), self.allSprites, self.collisionSprites, self.semicollisionSprites)
+                self.player = Player(
+                    pos = (obj.x, obj.y), 
+                    groups = self.allSprites, 
+                    collision_sprites = self.collisionSprites, 
+                    semicollision_sprites = self.semicollisionSprites,
+                    frames = level_frames['player'])
+                
             else:
                 if obj.name in ('barrel', 'crate'):
                     Sprite((obj.x, obj.y), obj.image, (self.allSprites, self.collisionSprites))

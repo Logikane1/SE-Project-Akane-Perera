@@ -4,27 +4,35 @@ from os.path import join
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, semicollision_sprites):
+    def __init__(self, pos, groups, collision_sprites, semicollision_sprites, frames):
+        #general setup
         super().__init__(groups)
-        
-        self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0.png'))
         self.z = Z_LAYERS['main']
         
+        #image
+        self.frames, self.frame_index = frames, 0
+        self.state, self.facing_right = 'idle', True
+        self.image = self.frames[self.state][self.frame_index]
+        
+        #rectangles
         self.rect = self.image.get_frect(topleft = pos)
         self.hitboxRect = self.rect.inflate(-76, -36)
         self.previousRect = self.hitboxRect.copy()
         
+        #movement
         self.direction = vector()
         self.speed = 200
         self.gravity = 1300
         self.jump = False
         self.jumpHeight = 700
         
+        #collisions
         self.collision_sprites = collision_sprites
         self.semicollision_sprites = semicollision_sprites
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         self.platform = None
         
+        #timers
         self.timers = {
             'wall jump': Timer(300),
             'wall slide': Timer(200),
@@ -127,10 +135,18 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
     
+    def animate(self, dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
+    
     def update(self, dt):
+        #general updating
         self.previousRect = self.hitboxRect.copy()
         self.update_timers()
+        #input updating
         self.input()
         self.move(dt)
         self.platformMoving(dt)
         self.checkContact()
+        #animating
+        self.animate(dt)

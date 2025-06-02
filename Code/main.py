@@ -24,7 +24,6 @@ class Game:
             'candle' : importFolder('Graphics', 'level', 'candle'),
             'player' : importSubfolder('Graphics', 'player')
         }
-        print(self.level_frames['player'])
 
 
     def run(self):
