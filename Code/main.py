@@ -24,6 +24,7 @@ class Game:
             'candle' : importFolder('Graphics', 'level', 'candle'),
         }
 
+
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
