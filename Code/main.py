@@ -23,7 +23,7 @@ class Game:
             'dark_trees' : importSubfolder('Graphics', 'level', 'trees'),
             'candle' : importFolder('Graphics', 'level', 'candle'),
             'player' : importSubfolder('Graphics', 'player')
-        }
+        } 
 
 
     def run(self):

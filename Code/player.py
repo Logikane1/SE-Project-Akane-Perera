@@ -142,6 +142,16 @@ class Player(pygame.sprite.Sprite):
         self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
         self.image = self.image if self.facing_right else pygame.transform.flip(self.image, True, False)
     
+    def get_state(self):
+        if self.on_surface['floor']:
+            self.state = 'idle' if self.direction.x == 0 else 'running'
+        elif any((self.on_surface['left'], self.on_surface['right'])):
+            self.state = 'wall'
+        elif self.direction.y < 0:
+            self.state = 'jump'
+        else:
+            self.state = 'fall'
+    
     def update(self, dt):
         #general updating
         self.previousRect = self.hitboxRect.copy()
@@ -152,4 +162,5 @@ class Player(pygame.sprite.Sprite):
         self.platformMoving(dt)
         self.checkContact()
         #animating
+        self.get_state()
         self.animate(dt)

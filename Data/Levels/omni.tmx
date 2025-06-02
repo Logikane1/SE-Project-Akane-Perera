@@ -138,7 +138,7 @@
   </object>
   <object id="58" name="barrel" gid="168" x="880.077" y="577.308" width="46" height="50"/>
   <object id="59" name="crate" gid="169" x="802.692" y="574.923" width="50" height="36"/>
-  <object id="71" name="Player" gid="176" x="685" y="586.462" width="110" height="96"/>
+  <object id="71" name="Player" gid="176" x="677.129" y="593.677" width="110" height="96"/>
  </objectgroup>
  <objectgroup id="3" name="Moving Objects">
   <object id="22" name="helicopter" gid="154" x="548.632" y="392.074" width="43.483" height="389.195">
