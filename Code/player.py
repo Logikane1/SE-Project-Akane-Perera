@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, semicollision_sprites):
         super().__init__(groups)
         
-        self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0_idle.png'))
+        self.image = pygame.image.load(join('Graphics', 'player', 'idle', '0.png'))
         self.z = Z_LAYERS['main']
         
         self.rect = self.image.get_frect(topleft = pos)
