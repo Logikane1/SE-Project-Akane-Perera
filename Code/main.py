@@ -21,8 +21,10 @@ class Game:
             'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
             'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
             'dark_trees' : importSubfolder('Graphics', 'level', 'trees'),
-            'candle' : importFolder('Graphics', 'level', 'candle')
+            'candle' : importFolder('Graphics', 'level', 'candle'),
+            'player': importSubfolder('Graphics', 'player')
         }
+        print(self.level_frames['player'])
 
     def run(self):
         while True:
