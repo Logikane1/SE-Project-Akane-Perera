@@ -26,7 +26,7 @@ class Level:
                 
                 match layer:
                     case 'Background': z = Z_LAYERS['bg tiles']
-                    case 'Foreground': z = Z_LAYERS['fg']
+                    case 'Foreground': z = Z_LAYERS['bg tiles']
                     case _: z = Z_LAYERS['main']
                     
                 Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, groups, z)

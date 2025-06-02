@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 1300
         self.jump = False
         self.jumpHeight = 700
+        self.attacking = False 
         
         #collisions
         self.collision_sprites = collision_sprites
@@ -36,25 +37,39 @@ class Player(pygame.sprite.Sprite):
         self.timers = {
             'wall jump': Timer(300),
             'wall slide': Timer(200),
-            'platform fall': Timer(100)
+            'platform fall': Timer(100),
+            'attack cooldown' : Timer(500)
         }
     
     def input(self):
         keys = pygame.key.get_pressed()
         inputVector = vector(0,0)
         if not self.timers['wall jump'].active:
+            
             if keys[pygame.K_d]:
                 inputVector.x += 1
                 self.facing_right = True
+            
             if keys[pygame.K_a]:
                 inputVector.x -= 1
                 self.facing_right = False
+            
             if keys[pygame.K_s]:
                 self.timers['platform fall'].activate()
+                
+            if keys[pygame.K_x]:
+                self.attack()
+            
             self.direction.x = inputVector.normalize().x if inputVector else inputVector.x
         
         if keys[pygame.K_SPACE]:
             self.jump = True
+            
+    def attack(self):
+        if not self.timers['attack cooldown'].active:
+            self.attacking = True
+            self.frame_index = 0
+            self.timers['attack cooldown'].activate()
             
     def move(self, dt):
         self.hitboxRect.x += self.direction.x * self.speed * dt
@@ -139,18 +154,28 @@ class Player(pygame.sprite.Sprite):
     
     def animate(self, dt):
         self.frame_index += ANIMATION_SPEED * dt
+        if self.state == 'attack' and self.frame_index >= len(self.frames[self.state]):
+            self.state = 'idle'
         self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
         self.image = self.image if self.facing_right else pygame.transform.flip(self.image, True, False)
-    
+        
+        if self.attacking and self.frame_index > len(self.frames[self.state]):
+            self.attacking = False
+        
     def get_state(self):
         if self.on_surface['floor']:
-            self.state = 'idle' if self.direction.x == 0 else 'running'
-        elif any((self.on_surface['left'], self.on_surface['right'])):
-            self.state = 'wall'
-        elif self.direction.y < 0:
-            self.state = 'jump'
+            if self.attacking:
+                self.state = 'attack'
+            else:
+                self.state = 'idle' if self.direction.x == 0 else 'running'
         else:
-            self.state = 'fall'
+            if self.attacking:
+                self.state = 'air_attack'
+            else:
+                if any((self.on_surface['left'], self.on_surface['right'])):
+                    self.state = 'wall'
+                else:
+                    self.state = 'jump' if self.direction.y < 0 else 'fall'
     
     def update(self, dt):
         #general updating
