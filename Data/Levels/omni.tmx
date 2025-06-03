@@ -155,7 +155,19 @@
     <property name="speed" type="int" value="60"/>
    </properties>
   </object>
-  <object id="73" name="saw" gid="153" x="60.792" y="827.36" width="324.149" height="64"/>
-  <object id="74" name="boat" gid="153" x="2390.54" y="865.471" width="551.158" height="64"/>
+  <object id="73" name="saw" gid="153" x="60.792" y="827.36" width="324.149" height="64">
+   <properties>
+    <property name="flip" type="bool" value="false"/>
+    <property name="platform" type="bool" value="false"/>
+    <property name="speed" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="74" name="boat" gid="153" x="2390.54" y="865.471" width="551.158" height="64">
+   <properties>
+    <property name="flip" type="bool" value="true"/>
+    <property name="platform" type="bool" value="true"/>
+    <property name="speed" type="int" value="60"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
