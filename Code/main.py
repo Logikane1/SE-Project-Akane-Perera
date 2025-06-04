@@ -24,6 +24,7 @@ class Game:
             'candle' : importFolder('Graphics', 'level', 'candle'),
             'player' : importSubfolder('Graphics', 'player'),
             'saw' : importFolder('Graphics', 'enemies', 'saw', 'animation'),
+            'saw chain' : importImage('Graphics', 'enemies', 'saw', 'saw_chain'),
             'helicopter' : importFolder('Graphics', 'level', 'helicopter'),
             'boat' : importFolder('Graphics', 'objects', 'boat')
         } 

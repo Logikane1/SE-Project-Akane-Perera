@@ -72,17 +72,28 @@ class Level:
             else:
                 frames = level_frames[obj.name]
                 groups = (self.allSprites, self.semicollisionSprites) if obj.properties['platform'] else (self.allSprites, self.damageSprites)
-                if obj.width > obj.height: # horizontal movement
+                if obj.width > obj.height: # horizontal moving platforms
                     move_dir = 'x'
                     start_position = (obj.x, obj.y + obj.height / 2)
                     end_position = (obj.x + obj.width, obj.y + obj.height / 2)
-                else:
+                else: # vertical moving platforms
                     move_dir = 'y'
                     start_position = (obj.x + obj.width / 2, obj.y)
                     end_position = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
                 MovingSprite(frames, groups, start_position, end_position, move_dir, speed)
                 
+                if obj.name == 'saw':
+                    if move_dir == 'x':
+                        y = start_position[1] - level_frames['saw chain'].get_height() / 2 # middle of the rectangle
+                        left, right = int(start_position[0]), int(end_position[0])
+                        for x in range(left, right, 20):
+                            Sprite((x, y), level_frames['saw chain'], self.allSprites, Z_LAYERS['bg details'])
+                    else:
+                        x = start_position[0] - level_frames['saw chain'].get_width() / 2 # middle of the rectangle
+                        top, bottom = int(start_position[1]), int(end_position[1])
+                        for y in range(top, bottom, 20):
+                            Sprite((x, y), level_frames['saw chain'], self.allSprites, Z_LAYERS['bg details'])
     def run(self, dt):
         self.displayWindow.fill('black')
         self.allSprites.update(dt)
