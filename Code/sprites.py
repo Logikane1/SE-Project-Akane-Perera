@@ -1,4 +1,5 @@
 from gameSettings import *
+from math import sin, cos, radians
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos, surf = pygame.Surface((TILE_SIZE, TILE_SIZE)), groups = None, z = Z_LAYERS['main']):
@@ -65,3 +66,21 @@ class MovingSprite(AnimatedSprite):
         self.animate(dt)
         if self.flip:
             self.image = pygame.transform.flip(self.image, self.reverse['x'], self.reverse['y'])
+            
+class Spike(Sprite):
+    def __init__(self, pos, surf, groups, radius, speed, start_angle, end_angle, z = Z_LAYERS['main']):
+        self.center = pos
+        self.radius = radius # acts as the hypotenuse /  is the radius of the spike ball circlular path
+        self.speed = speed
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.angle = self.start_angle # a
+        
+        # trigonometry
+        y = self.center[1] + sin(radians(self.angle)) * self.radius # y = sin(a) x r
+        x = self.center[0] + cos(radians(self.angle)) * self.radius # x = cos(a) x r
+        
+        super().__init__((x,y), surf, groups, z)
+        
+    def update(self, dt):
+        self.angle = self.speed + dt

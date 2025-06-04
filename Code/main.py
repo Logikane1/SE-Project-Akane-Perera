@@ -26,7 +26,8 @@ class Game:
             'saw' : importFolder('Graphics', 'enemies', 'saw', 'animation'),
             'saw chain' : importImage('Graphics', 'enemies', 'saw', 'saw_chain'),
             'helicopter' : importFolder('Graphics', 'level', 'helicopter'),
-            'boat' : importFolder('Graphics', 'objects', 'boat')
+            'boat' : importFolder('Graphics', 'objects', 'boat'),
+            'spike' : importImage('Graphics', 'enemies', 'spike_ball', 'Spiked Ball')
         } 
 
 
