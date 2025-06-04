@@ -57,5 +57,5 @@ class MovingSprite(AnimatedSprite):
         self.previousRect = self.rect.copy()
         self.rect.topleft += self.direction * self.speed * dt
         self.checkBorder()
-        
+        self.animate(dt)
         
