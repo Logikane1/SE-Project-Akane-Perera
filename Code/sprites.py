@@ -83,4 +83,7 @@ class Spike(Sprite):
         super().__init__((x,y), surf, groups, z)
         
     def update(self, dt):
-        self.angle = self.speed + dt
+        self.angle += self.speed * dt
+        y = self.center[1] + sin(radians(self.angle)) * self.radius
+        x = self.center[0] + cos(radians(self.angle)) * self.radius
+        self.rect.center = (x,y)
