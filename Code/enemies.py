@@ -52,6 +52,7 @@ class Shell(pygame.sprite.Sprite):
         self.z = Z_LAYERS['main']
         self.player = player
         self.shootTimer = Timer(3000)
+        self.has_fired = False
     
     def stage_management(self): # dealing with when the shell should shoot
         player_pos, shell_pos = vector(self.player.hitboxRect.center), vector(self.rect.center)
@@ -72,3 +73,15 @@ class Shell(pygame.sprite.Sprite):
         self.frame_index += ANIMATION_SPEED * dt
         if self.frame_index < len(self.frames[self.state]):
             self.image = self.frames[self.state][int(self.frame_index)]
+            
+            # fire animation
+            if self.state == 'fire' and int(self.frame_index) == 3 and not self.has_fired:
+                print('shoot pearl')
+                self.has_fired = True
+            
+        else:
+            self.frame_index = 0
+            if self.state == 'fire':
+                self.state = 'idle'
+                self.has_fired = False
+            
