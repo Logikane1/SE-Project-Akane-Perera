@@ -32,7 +32,7 @@ class Tooth(pygame.sprite.Sprite):
             self.direction *= -1
 
 class Shell(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups, reverse, player):
+    def __init__(self, pos, frames, groups, reverse, player, create_pearl):
         super().__init__(groups)
         if reverse:
             #flip all frames in frames
@@ -53,6 +53,7 @@ class Shell(pygame.sprite.Sprite):
         self.player = player
         self.shootTimer = Timer(3000)
         self.has_fired = False
+        self.create_pearl = create_pearl
     
     def stage_management(self): # dealing with when the shell should shoot
         player_pos, shell_pos = vector(self.player.hitboxRect.center), vector(self.rect.center)
@@ -76,7 +77,7 @@ class Shell(pygame.sprite.Sprite):
             
             # fire animation
             if self.state == 'fire' and int(self.frame_index) == 3 and not self.has_fired:
-                print('shoot pearl')
+                self.create_pearl(self.rect.center, self.bullet_direction)
                 self.has_fired = True
             
         else:
@@ -84,4 +85,15 @@ class Shell(pygame.sprite.Sprite):
             if self.state == 'fire':
                 self.state = 'idle'
                 self.has_fired = False
-            
+
+class Pearl(pygame.sprite.Sprite):
+    def __init__(self, pos, groups, surf, direction, speed):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_frect(center = pos + vector(50 * direction, 0))
+        self.direction = direction
+        self.speed = speed
+        self.z = Z_LAYERS['main']
+    
+    def update(self, dt):
+        self.rect.x += self.direction * self.speed * dt

@@ -30,7 +30,8 @@ class Game:
             'spike' : importImage('Graphics', 'enemies', 'spike_ball', 'Spiked Ball'),
             'spike_chain' : importImage('Graphics' , 'enemies', 'spike_ball', 'spiked_chain'),
             'tooth' : importFolder('Graphics', 'enemies', 'tooth', 'run'),
-            'shell' : importSubfolder('Graphics', 'enemies', 'shell')
+            'shell' : importSubfolder('Graphics', 'enemies', 'shell'),
+            'pearl' : importImage('Graphics', 'enemies', 'bullets', 'pearl')
         } 
 
 
