@@ -1,5 +1,6 @@
 from gameSettings import * 
 from random import choice
+from gameTimer import Timer
 
 class Tooth(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, collision_sprites):
@@ -31,15 +32,17 @@ class Tooth(pygame.sprite.Sprite):
             self.direction *= -1
 
 class Shell(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups, reverse):
+    def __init__(self, pos, frames, groups, reverse, player):
         super().__init__(groups)
         if reverse:
             #flip all frames in frames
             self.frames = {}
             for key, surfs in frames.items():
                 self.frames[key] = [pygame.transform.flip(surf, True, False) for surf in surfs]
+            self.bullet_direction = -1
         else:
             self.frames = frames
+            self.bullet_direction = 1
         
         self.frame_index = 0
         self.state = 'idle'
@@ -47,3 +50,25 @@ class Shell(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft = pos)
         self.previousRect = self.rect.copy()
         self.z = Z_LAYERS['main']
+        self.player = player
+        self.shootTimer = Timer(3000)
+    
+    def stage_management(self): # dealing with when the shell should shoot
+        player_pos, shell_pos = vector(self.player.hitboxRect.center), vector(self.rect.center)
+        player_near = shell_pos.distance_to(player_pos) < 500
+        player_front = shell_pos.x < player_pos.x if self.bullet_direction > 0 else shell_pos.x > player_pos.x
+        player_level = abs(shell_pos.y - player_pos.y) < 30
+        
+        if player_near and player_front and player_level and not self.shootTimer.active:
+            self.state = 'fire'
+            self.frame_index = 0
+            self.shootTimer.activate()
+            
+    def update(self, dt):
+        self.shootTimer.update()
+        self.stage_management()
+        
+        # animation / attack logic
+        self.frame_index += ANIMATION_SPEED * dt
+        if self.frame_index < len(self.frames[self.state]):
+            self.image = self.frames[self.state][int(self.frame_index)]

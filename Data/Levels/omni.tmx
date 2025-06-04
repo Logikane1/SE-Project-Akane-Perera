@@ -191,7 +191,7 @@
  </objectgroup>
  <objectgroup id="9" name="Enemies">
   <object id="79" name="tooth" gid="178" x="1693.02" y="256.3" width="48" height="46"/>
-  <object id="80" name="shell" gid="179" x="445.2" y="576.959" width="76" height="46">
+  <object id="80" name="shell" gid="179" x="252.403" y="449.767" width="76" height="46">
    <properties>
     <property name="reverse" type="bool" value="false"/>
    </properties>

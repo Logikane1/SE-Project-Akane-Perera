@@ -119,7 +119,7 @@ class Level:
             if obj.name == 'tooth':
                 Tooth((obj.x, obj.y), level_frames['tooth'], (self.allSprites, self.damageSprites, self.toothSprites), self.collisionSprites)
             if obj.name == 'shell':
-                Shell((obj.x, obj.y), level_frames['shell'], (self.allSprites, self.collisionSprites), obj.properties['reverse'])
+                Shell((obj.x, obj.y), level_frames['shell'], (self.allSprites, self.collisionSprites), obj.properties['reverse'], self.player)
     def run(self, dt):
         self.displayWindow.fill('black')
         self.allSprites.update(dt)
