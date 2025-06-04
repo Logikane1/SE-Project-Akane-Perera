@@ -163,7 +163,7 @@
     <property name="speed" type="int" value="60"/>
    </properties>
   </object>
-  <object id="74" name="boat" gid="153" x="2390.54" y="865.471" width="551.158" height="64">
+  <object id="74" name="boat" gid="153" x="2390.54" y="865.471" width="768" height="38">
    <properties>
     <property name="flip" type="bool" value="true"/>
     <property name="platform" type="bool" value="true"/>

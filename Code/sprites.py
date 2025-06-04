@@ -22,7 +22,7 @@ class AnimatedSprite(Sprite):
         self.animate(dt)
         
 class MovingSprite(AnimatedSprite):
-    def __init__(self, frames, groups, start_position, end_position, move_dir, speed):
+    def __init__(self, frames, groups, start_position, end_position, move_dir, speed, flip = False):
         super().__init__(start_position, frames, groups)
         if move_dir == 'x':
             self.rect.midleft = start_position
@@ -37,6 +37,9 @@ class MovingSprite(AnimatedSprite):
         self.direction = vector(1,0) if move_dir == 'x' else vector(0,1)
         self.move_dir = move_dir
         
+        self.flip = flip
+        self.reverse = {'x': False, 'y': False}
+        
     def checkBorder(self): # keeps platform in the rectangle of its movement 
         if self.move_dir == 'x': # for platforms moving horizontally
             if self.rect.right >= self.end_position[0] and self.direction.x == 1:
@@ -45,6 +48,7 @@ class MovingSprite(AnimatedSprite):
             if self.rect.left <= self.start_position[0] and self.direction.x == -1:
                 self.direction.x = 1
                 self.rect.left = self.start_position[0]
+            self.reverse['x'] = True if self.direction.x < 0 else False
         else:
             if self.rect.bottom >= self.end_position[1] and self.direction.y == 1:
                 self.direction.y = -1
@@ -52,10 +56,12 @@ class MovingSprite(AnimatedSprite):
             if self.rect.top <= self.start_position[1] and self.direction.y == -1:
                 self.direction.y = 1
                 self.rect.top = self.start_position[1]
-    
+            self.reverse['y'] = True if self.direction.y >  0 else False
+            
     def update(self, dt):
         self.previousRect = self.rect.copy()
         self.rect.topleft += self.direction * self.speed * dt
         self.checkBorder()
         self.animate(dt)
-        
+        if self.flip:
+            self.image = pygame.transform.flip(self.image, self.reverse['x'], self.reverse['y'])

@@ -81,7 +81,7 @@ class Level:
                     start_position = (obj.x + obj.width / 2, obj.y)
                     end_position = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
-                MovingSprite(frames, groups, start_position, end_position, move_dir, speed)
+                MovingSprite(frames, groups, start_position, end_position, move_dir, speed, obj.properties['flip'])
                 
                 if obj.name == 'saw':
                     if move_dir == 'x':
