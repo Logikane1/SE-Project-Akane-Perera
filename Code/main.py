@@ -28,7 +28,8 @@ class Game:
             'helicopter' : importFolder('Graphics', 'level', 'helicopter'),
             'boat' : importFolder('Graphics', 'objects', 'boat'),
             'spike' : importImage('Graphics', 'enemies', 'spike_ball', 'Spiked Ball'),
-            'spike_chain' : importImage('Graphics' , 'enemies', 'spike_ball', 'spiked_chain')
+            'spike_chain' : importImage('Graphics' , 'enemies', 'spike_ball', 'spiked_chain'),
+            'tooth' : importFolder("Graphics", "enemies", "tooth", "run"),
         } 
 
 

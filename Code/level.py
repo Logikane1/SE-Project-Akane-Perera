@@ -3,6 +3,8 @@ from sprites import Sprite, AnimatedSprite, MovingSprite, Spike
 from player import Player
 from groups import AllSprites
 from random import uniform
+from enemies import Tooth
+
 class Level:
     def __init__(self, tmx_map, level_frames):
         self.displayWindow = pygame.display.get_surface()
@@ -12,6 +14,7 @@ class Level:
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
         self.damageSprites = pygame.sprite.Group()
+        self.toothSprites = pygame.sprite.Group()
         
         self.setup(tmx_map, level_frames)
         
@@ -30,7 +33,6 @@ class Level:
                     case _: z = Z_LAYERS['main']
                     
                 Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, groups, z)
-        
         #bg details
         for obj in tmx_map.get_layer_by_name('BG details'):
             if obj.name == 'static':
@@ -112,6 +114,11 @@ class Level:
                         top, bottom = int(start_position[1]), int(end_position[1])
                         for y in range(top, bottom, 20):
                             Sprite((x, y), level_frames['saw chain'], self.allSprites, Z_LAYERS['bg details'])
+        #enemies
+        for obj in tmx_map.get_layer_by_name('Enemies'):
+            if obj.name == 'tooth':
+                Tooth((obj.x, obj.y), level_frames['tooth'], (self.allSprites, self.damageSprites, self.toothSprites), self.collisionSprites)
+
     def run(self, dt):
         self.displayWindow.fill('black')
         self.allSprites.update(dt)
