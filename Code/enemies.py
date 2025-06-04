@@ -29,3 +29,21 @@ class Tooth(pygame.sprite.Sprite):
         if floor_rect_right.collidelist(self.collision_rects) < 0 and self.direction > 0 or\
         floor_rect_left.collidelist(self.collision_rects) < 0 and self.direction < 0:
             self.direction *= -1
+
+class Shell(pygame.sprite.Sprite):
+    def __init__(self, pos, frames, groups, reverse):
+        super().__init__(groups)
+        if reverse:
+            #flip all frames in frames
+            self.frames = {}
+            for key, surfs in frames.items():
+                self.frames[key] = [pygame.transform.flip(surf, True, False) for surf in surfs]
+        else:
+            self.frames = frames
+        
+        self.frame_index = 0
+        self.state = 'idle'
+        self.image = self.frames[self.state][self.frame_index]
+        self.rect = self.image.get_frect(topleft = pos)
+        self.previousRect = self.rect.copy()
+        self.z = Z_LAYERS['main']

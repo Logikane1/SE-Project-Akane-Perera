@@ -29,7 +29,8 @@ class Game:
             'boat' : importFolder('Graphics', 'objects', 'boat'),
             'spike' : importImage('Graphics', 'enemies', 'spike_ball', 'Spiked Ball'),
             'spike_chain' : importImage('Graphics' , 'enemies', 'spike_ball', 'spiked_chain'),
-            'tooth' : importFolder("Graphics", "enemies", "tooth", "run"),
+            'tooth' : importFolder('Graphics', 'enemies', 'tooth', 'run'),
+            'shell' : importSubfolder('Graphics', 'enemies', 'shell')
         } 
 
 

@@ -3,7 +3,7 @@ from sprites import Sprite, AnimatedSprite, MovingSprite, Spike
 from player import Player
 from groups import AllSprites
 from random import uniform
-from enemies import Tooth
+from enemies import Tooth, Shell
 
 class Level:
     def __init__(self, tmx_map, level_frames):
@@ -118,7 +118,8 @@ class Level:
         for obj in tmx_map.get_layer_by_name('Enemies'):
             if obj.name == 'tooth':
                 Tooth((obj.x, obj.y), level_frames['tooth'], (self.allSprites, self.damageSprites, self.toothSprites), self.collisionSprites)
-
+            if obj.name == 'shell':
+                Shell((obj.x, obj.y), level_frames['shell'], (self.allSprites, self.collisionSprites), obj.properties['reverse'])
     def run(self, dt):
         self.displayWindow.fill('black')
         self.allSprites.update(dt)
