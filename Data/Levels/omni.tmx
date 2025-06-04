@@ -172,7 +172,7 @@
   </object>
   <object id="76" name="spike" gid="177" x="2257.92" y="393.269" width="54" height="54">
    <properties>
-    <property name="end angle" type="int" value="-1"/>
+    <property name="end angle" type="int" value="180"/>
     <property name="platform" type="bool" value="false"/>
     <property name="radius" type="int" value="100"/>
     <property name="speed" type="int" value="50"/>
