@@ -22,7 +22,10 @@ class Game:
             'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
             'dark_trees' : importSubfolder('Graphics', 'level', 'trees'),
             'candle' : importFolder('Graphics', 'level', 'candle'),
-            'player' : importSubfolder('Graphics', 'player')
+            'player' : importSubfolder('Graphics', 'player'),
+            'saw' : importFolder('Graphics', 'enemies', 'saw', 'animation'),
+            'helicopter' : importFolder('Graphics', 'level', 'helicopter'),
+            'boat' : importFolder('Graphics', 'objects', 'boat')
         } 
 
 
