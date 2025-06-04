@@ -75,8 +75,18 @@ class Level:
                     speed = obj.properties['speed'],
                     start_angle = obj.properties['start angle'],
                     end_angle = obj.properties['end angle'],
-                    groups = (self.allSprites, self.damageSprites)
-                    )
+                    groups = (self.allSprites, self.damageSprites))
+                for radius in range(0, obj.properties['radius'], 20):
+                    Spike(
+                        pos = (obj.x + obj.width, obj.y + obj.height),
+                        surf = level_frames['spike_chain'],
+                        radius = radius,
+                        speed = obj.properties['speed'],
+                        start_angle = obj.properties['start angle'],
+                        end_angle = obj.properties['end angle'],
+                        groups = self.allSprites,
+                        z = Z_LAYERS['bg details'])
+                
             else:
                 frames = level_frames[obj.name]
                 groups = (self.allSprites, self.semicollisionSprites) if obj.properties['platform'] else (self.allSprites, self.damageSprites)
