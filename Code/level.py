@@ -1,5 +1,5 @@
 from gameSettings import *
-from sprites import Sprite, AnimatedSprite, MovingSprite, Spike, Item
+from sprites import Sprite, AnimatedSprite, MovingSprite, Spike, Item, ParticleEffectSprite
 from player import Player
 from groups import AllSprites
 from random import uniform
@@ -16,12 +16,14 @@ class Level:
         self.damageSprites = pygame.sprite.Group()
         self.toothSprites = pygame.sprite.Group()
         self.pearlSprites = pygame.sprite.Group()
+        self.itemSprites = pygame.sprite.Group()
         
         self.setup(tmx_map, level_frames)
         
         #frames
         
         self.pearl_surf = level_frames['pearl']
+        self.particle_frames = level_frames['particle']
         
     def setup(self, tmx_map, level_frames):
         #tiles
@@ -133,14 +135,17 @@ class Level:
                     create_pearl = self.create_pearl )
         #items
         for obj in tmx_map.get_layer_by_name('Items'):
-            Item(obj.name, (obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), level_frames['items'][obj.name], self.allSprites)
+            Item(obj.name, (obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), level_frames['items'][obj.name], (self.allSprites, self.itemSprites))
         
     def create_pearl(self, pos, direction):
         Pearl(pos, (self.allSprites, self.damageSprites, self.pearlSprites), self.pearl_surf, direction, 150)
         
     def pearl_collision(self):
         for sprite in self.collisionSprites:
-            pygame.sprite.spritecollide(sprite, self.pearlSprites, True)
+            sprite = pygame.sprite.spritecollide(sprite, self.pearlSprites, True)
+            if sprite:
+                ParticleEffectSprite((sprite[0].rect.center), self.particle_frames, self.allSprites)
+    
             
     def hit_collision(self):
         for sprite in self.damageSprites:
@@ -148,6 +153,13 @@ class Level:
                 print("player hit!")
                 if hasattr(sprite, 'pearl'):
                     sprite.kill()
+                    ParticleEffectSprite((sprite.rect.center), self.particle_frames, self.allSprites)
+    
+    def item_collision(self):
+        if self.itemSprites:
+            item_sprites = pygame.sprite.spritecollide(self.player, self.itemSprites, True)
+            if item_sprites:
+                ParticleEffectSprite((item_sprites[0].rect.center), self.particle_frames, self.allSprites)
     
     def run(self, dt):
         self.displayWindow.fill('black')
@@ -155,5 +167,6 @@ class Level:
         self.allSprites.update(dt)
         self.pearl_collision()
         self.hit_collision()
+        self.item_collision()
         
         self.allSprites.draw(self.player.hitboxRect.center)

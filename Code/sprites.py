@@ -26,6 +26,20 @@ class Item(AnimatedSprite):
     def __init__(self, item_type, pos, frames, groups):
         super().__init__(pos, frames, groups)
         self.rect.center = pos
+        self.item_type = item_type
+        
+class ParticleEffectSprite(AnimatedSprite):
+    def __init__(self, pos, frames, groups):
+        super().__init__(pos, frames, groups)
+        self.rect.center = pos
+        self.z = Z_LAYERS['fg']
+        
+    def animate(self, dt): # Plays the animation once then destorys the object
+        self.frame_index += self.animation_speed * dt
+        if self.frame_index < len(self.frames):
+            self.image = self.frames[int(self.frame_index)]
+        else:
+            self.kill()
         
 class MovingSprite(AnimatedSprite):
     def __init__(self, frames, groups, start_position, end_position, move_dir, speed, flip = False):
