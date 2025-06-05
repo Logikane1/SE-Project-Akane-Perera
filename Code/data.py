@@ -13,7 +13,10 @@ class Data:
     @coins.setter # setter
     def coins(self, value):
         self._coins = value
-        self.ui.show_coins(value)
+        if self.coins >= 100:
+            self.coins -= 100
+            self.health += 1
+        self.ui.show_coins(self.coins)
         
     @property # getter
     def health(self): # health and _health are the same to outside files, but can now be treated seperately in the Data file
