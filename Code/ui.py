@@ -1,6 +1,7 @@
 from gameSettings import *
 from sprites import AnimatedSprite
 from random import randint
+from gameTimer import Timer
 
 class UI:
     def __init__(self, font, frames):
@@ -13,8 +14,10 @@ class UI:
         self.heart_surf_width = self.heart_frames[0].get_width()
         self.heart_padding = 5
         
-        
         # coins
+        self.coin_amount = 0
+        self.coin_timer = Timer(1000)
+        
     
     def create_hearts(self, amount):
         for sprite in self.sprites:
@@ -24,9 +27,18 @@ class UI:
             y = 10
             Heart((x,y), self.heart_frames, self.sprites)
     
+    def display_text(self):
+        text_surf = self.font.render(str(self.coin_amount), False, 'white')
+        text_rect = text_surf.get_frect(topleft = (16, 34))
+        self.display_surface.blit(text_surf, text_rect)
+        
+    def show_coins(self, amount):
+        self.coin_amount = amount
+    
     def update(self, dt):
         self.sprites.update(dt)
         self.sprites.draw(self.display_surface)
+        self.display_text()
             
 class Heart(AnimatedSprite):
     def __init__(self, pos, frames, groups):

@@ -2,12 +2,21 @@
 class Data:
     def __init__(self, ui):
         self.ui = ui
-        self.coins = 0
+        self._coins = 0
         self._health = 5 # private attribute
         self.ui.create_hearts(self._health)
         
     @property # getter
-    def health(self): # health and _health are the same to outside file, but can now be treated seperately in the Data file
+    def coins(self): # coins and _coins are the same to outside files, but can now be treated seperately in the Data file
+        return self._coins
+    
+    @coins.setter # setter
+    def coins(self, value):
+        self._coins = value
+        self.ui.show_coins(value)
+        
+    @property # getter
+    def health(self): # health and _health are the same to outside files, but can now be treated seperately in the Data file
         return self._health
     
     @health.setter # setter
