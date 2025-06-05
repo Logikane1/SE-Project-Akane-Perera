@@ -38,7 +38,8 @@ class Player(pygame.sprite.Sprite):
             'wall jump': Timer(300),
             'wall slide': Timer(200),
             'platform fall': Timer(100),
-            'attack cooldown' : Timer(500)
+            'attack cooldown' : Timer(500),
+            'hit': Timer(600)
         }
     
     def input(self):
@@ -176,6 +177,11 @@ class Player(pygame.sprite.Sprite):
                     self.state = 'wall'
                 else:
                     self.state = 'jump' if self.direction.y < 0 else 'fall'
+    
+    def get_damage(self):
+        if not self.timers['hit'].active:
+            print('player hit!')
+            self.timers['hit'].activate()
     
     def update(self, dt):
         #general updating
