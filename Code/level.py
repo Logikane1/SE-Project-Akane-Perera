@@ -1,5 +1,5 @@
 from gameSettings import *
-from sprites import Sprite, AnimatedSprite, MovingSprite, Spike
+from sprites import Sprite, AnimatedSprite, MovingSprite, Spike, Item
 from player import Player
 from groups import AllSprites
 from random import uniform
@@ -131,7 +131,10 @@ class Level:
                     reverse = obj.properties['reverse'], 
                     player = self.player, 
                     create_pearl = self.create_pearl )
-    
+        #items
+        for obj in tmx_map.get_layer_by_name('Items'):
+            Item(obj.name, (obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), level_frames['items'][obj.name], self.allSprites)
+        
     def create_pearl(self, pos, direction):
         Pearl(pos, (self.allSprites, self.damageSprites, self.pearlSprites), self.pearl_surf, direction, 150)
         

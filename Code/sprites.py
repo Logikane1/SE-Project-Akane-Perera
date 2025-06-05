@@ -21,6 +21,11 @@ class AnimatedSprite(Sprite):
     
     def update(self, dt):
         self.animate(dt)
+
+class Item(AnimatedSprite):
+    def __init__(self, item_type, pos, frames, groups):
+        super().__init__(pos, frames, groups)
+        self.rect.center = pos
         
 class MovingSprite(AnimatedSprite):
     def __init__(self, frames, groups, start_position, end_position, move_dir, speed, flip = False):
@@ -96,3 +101,4 @@ class Spike(Sprite):
         y = self.center[1] + sin(radians(self.angle)) * self.radius
         x = self.center[0] + cos(radians(self.angle)) * self.radius
         self.rect.center = (x,y)
+        
