@@ -6,9 +6,9 @@ from random import uniform
 from enemies import Tooth, Shell, Pearl
 
 class Level:
-    def __init__(self, tmx_map, level_frames):
+    def __init__(self, tmx_map, level_frames, data):
         self.displayWindow = pygame.display.get_surface()
-        
+        self.data = data
         #groups
         self.allSprites = AllSprites()
         self.collisionSprites = pygame.sprite.Group()
@@ -54,7 +54,8 @@ class Level:
                     groups = self.allSprites, 
                     collision_sprites = self.collisionSprites, 
                     semicollision_sprites = self.semicollisionSprites,
-                    frames = level_frames['player'])
+                    frames = level_frames['player'],
+                    data = self.data)
                 
             else:
                 if obj.name in ('barrel', 'crate'):
@@ -73,7 +74,6 @@ class Level:
                     animation_speed = ANIMATION_SPEED if not 'dark_tree' in obj.name else ANIMATION_SPEED + uniform(-1, 1)
                         
                     AnimatedSprite((obj.x, obj.y), frames, groups, z, animation_speed)
-                        
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == "spike":
@@ -135,7 +135,7 @@ class Level:
                     create_pearl = self.create_pearl )
         #items
         for obj in tmx_map.get_layer_by_name('Items'):
-            Item(obj.name, (obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), level_frames['items'][obj.name], (self.allSprites, self.itemSprites))
+            Item(obj.name, (obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), level_frames['items'][obj.name], (self.allSprites, self.itemSprites), self.data)
         
     def create_pearl(self, pos, direction):
         Pearl(pos, (self.allSprites, self.damageSprites, self.pearlSprites), self.pearl_surf, direction, 150)
@@ -158,6 +158,7 @@ class Level:
         if self.itemSprites:
             item_sprites = pygame.sprite.spritecollide(self.player, self.itemSprites, True)
             if item_sprites:
+                item_sprites[0].activate()
                 ParticleEffectSprite((item_sprites[0].rect.center), self.particle_frames, self.allSprites)
     
     def attack_collision(self):
