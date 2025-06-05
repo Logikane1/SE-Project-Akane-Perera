@@ -1,6 +1,7 @@
 from gameSettings import *
 from gameTimer import Timer
 from os.path import join
+from math import sin
 
 
 class Player(pygame.sprite.Sprite):
@@ -183,6 +184,13 @@ class Player(pygame.sprite.Sprite):
             print('player hit!')
             self.timers['hit'].activate()
     
+    def flicker(self):
+        if self.timers['hit'].active and sin(pygame.time.get_ticks() / 25) >= 0 : # the sin curve will infintely change between 1 and -1, allowing for a 'flickering' effect
+            white_mask = pygame.mask.from_surface(self.image)
+            white_surf = white_mask.to_surface() # gives silhouette of the player
+            white_surf.set_colorkey('black')
+            self.image = white_surf
+    
     def update(self, dt):
         #general updating
         self.previousRect = self.hitboxRect.copy()
@@ -195,3 +203,4 @@ class Player(pygame.sprite.Sprite):
         #animating
         self.get_state()
         self.animate(dt)
+        self.flicker()

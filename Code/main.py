@@ -34,7 +34,7 @@ class Game:
             'pearl' : importImage('Graphics', 'enemies', 'bullets', 'pearl'),
             'items' : importSubfolder('Graphics', 'items'),
             'particle' : importFolder('Graphics', 'effects', 'particle')
-        } 
+        }
 
 
     def run(self):
