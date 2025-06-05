@@ -57,7 +57,7 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_s]:
                 self.timers['platform fall'].activate()
                 
-            if keys[pygame.K_x]:
+            if keys[pygame.K_l]:
                 self.attack()
             
             self.direction.x = inputVector.normalize().x if inputVector else inputVector.x
