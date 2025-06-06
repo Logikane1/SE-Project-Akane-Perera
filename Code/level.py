@@ -9,6 +9,11 @@ class Level:
     def __init__(self, tmx_map, level_frames, data):
         self.displayWindow = pygame.display.get_surface()
         self.data = data
+        
+        #level data
+        self.level_width = tmx_map.width * TILE_SIZE
+        self.level_bottom = tmx_map.height * TILE_SIZE
+        
         #groups
         self.allSprites = AllSprites()
         self.collisionSprites = pygame.sprite.Group()
@@ -21,7 +26,6 @@ class Level:
         self.setup(tmx_map, level_frames)
         
         #frames
-        
         self.pearl_surf = level_frames['pearl']
         self.particle_frames = level_frames['particle']
         
@@ -181,6 +185,19 @@ class Level:
             if target.rect.colliderect(self.player.rect) and self.player.attacking and facing_target:
                 target.reverse()
     
+    def check_constraint(self): # so the player doesn't go out of bounds
+        # constraining the player in the left and right direction
+        if self.player.hitboxRect.left <= 0:
+            self.player.hitboxRect.left = 0
+        if self.player.hitboxRect.right >= self.level_width:
+            self.player.hitboxRect.right = self.level_width
+        
+        # bottom constraints
+        if self.player.hitboxRect.bottom > self.level_bottom:
+            print('dead')
+            
+        # player finishes level
+        
     def run(self, dt):
         self.displayWindow.fill('black')
         
@@ -189,5 +206,6 @@ class Level:
         self.hit_collision()
         self.item_collision()
         self.attack_collision()
+        self.check_constraint()
         
         self.allSprites.draw(self.player.hitboxRect.center)
