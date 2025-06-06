@@ -151,3 +151,16 @@ class Node(pygame.sprite.Sprite):
         self.z = Z_LAYERS['path']
         self.level = level
         self.data = data
+        
+class Icon(pygame.sprite.Sprite):
+    def __init__(self, pos, groups, frames):
+        super().__init__(groups)
+        
+        #image
+        self.frames, self.frame_index = frames, 0
+        self.state = 'idle'
+        self.image = self.frames[self.state][self.frame_index]
+        self.z = Z_LAYERS['main']
+        
+        #rect
+        self.rect = self.image.get_frect(center = pos)

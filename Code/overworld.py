@@ -1,5 +1,5 @@
 from gameSettings import *
-from sprites import Sprite, AnimatedSprite, Node
+from sprites import Sprite, AnimatedSprite, Node, Icon
 from groups import WorldSprites
 from random import randint
 
@@ -35,6 +35,10 @@ class Overworld:
         # nodes and player
         for obj in tmx_map.get_layer_by_name('Nodes'):
             
+            #player
+            if obj.name == 'Node' and obj.properties['stage'] == self.data.current_level:
+                self.icon = Icon((obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), self.allSprites, overworld_frames['icons'])
+            
             #nodes
             if obj.name == 'Node':
                 Node(
@@ -46,4 +50,4 @@ class Overworld:
         
     def run(self, dt):
         self.allSprites.update(dt)
-        self.allSprites.draw((1000,800))
+        self.allSprites.draw(self.icon.rect.center)

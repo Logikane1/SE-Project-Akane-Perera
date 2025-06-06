@@ -14,12 +14,16 @@ class WorldSprites(pygame.sprite.Group):
         self.offset.x = -(target_position[0] - WINDOW_WIDTH / 2)
         self.offset.y = -(target_position[1] - WINDOW_HEIGHT / 2)
         
+        # drawing the background
         for sprite in sorted(self, key = lambda sprite: sprite.z):
-            if sprite.z == Z_LAYERS['path']:
-                if sprite.level <= self.data.unlocked_level:
+            if sprite.z <= Z_LAYERS['main']:
+                if sprite.z == Z_LAYERS['path']:
+                    if sprite.level <= self.data.unlocked_level:
+                        self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                else:
                     self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
-            else:
-                self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
+        #drawing the main
+        
         
 class AllSprites(pygame.sprite.Group):
     def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
