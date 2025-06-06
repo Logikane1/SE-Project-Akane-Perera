@@ -38,7 +38,9 @@ class Game:
             'shell' : importSubfolder('Graphics', 'enemies', 'shell'),
             'pearl' : importImage('Graphics', 'enemies', 'bullets', 'pearl'),
             'items' : importSubfolder('Graphics', 'items'),
-            'particle' : importFolder('Graphics', 'effects', 'particle')
+            'particle' : importFolder('Graphics', 'effects', 'particle'),
+            'water_top' : importFolder('Graphics', 'level', 'water', 'top'),
+            'water_body' : importImage('Graphics', 'level', 'water', 'body'),
         }
         
         self.font = pygame.font.Font(join('Graphics', 'ui', 'runescape_uf.ttf'), 40)
