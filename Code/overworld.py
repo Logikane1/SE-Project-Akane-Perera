@@ -1,6 +1,7 @@
 from gameSettings import *
-from sprites import Sprite, AnimatedSprite
+from sprites import Sprite, AnimatedSprite, Node
 from groups import WorldSprites
+from random import randint
 
 class Overworld:
     def __init__(self, tmx_map, data, overworld_frames):
@@ -26,10 +27,22 @@ class Overworld:
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == 'palm':
-                AnimatedSprite((obj.x, obj.y), overworld_frames['palms'], self.allSprites, Z_LAYERS['main'])
+                AnimatedSprite((obj.x, obj.y), overworld_frames['palms'], self.allSprites, Z_LAYERS['main'], randint(4, 6))
             else:
                 z = Z_LAYERS[f'{'bg details' if obj.name == 'grass' else 'bg tiles'}']
                 Sprite((obj.x, obj.y), obj.image, self.allSprites, )
+                
+        # nodes and player
+        for obj in tmx_map.get_layer_by_name('Nodes'):
+            
+            #nodes
+            if obj.name == 'Node':
+                Node(
+                    pos = (obj.x, obj.y), 
+                    surf = overworld_frames['path']['node'], 
+                    groups = self.allSprites,
+                    level = obj.properties['stage'],
+                    data = self.data)
         
     def run(self, dt):
         self.allSprites.update(dt)

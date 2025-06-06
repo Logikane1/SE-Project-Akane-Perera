@@ -58,6 +58,7 @@ class Game:
         self.overworld_frames ={
             'palms' : importFolder('Graphics', 'overworld', 'palm'),
             'water' : importFolder('Graphics', 'overworld', 'water'),
+            'path' : importFolderDict('Graphics', 'overworld', 'path')
         }
         
     def run(self):
