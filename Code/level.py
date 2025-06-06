@@ -16,10 +16,15 @@ class Level:
         tmx_level_properties = tmx_map.get_layer_by_name('Data')[0].properties
         if tmx_level_properties['bg']:
             bg_tile = level_frames['bg_tiles'][tmx_level_properties['bg']]
-            print(bg_tile)
+        else:
+            bg_tile = None
             
         #groups
-        self.allSprites = AllSprites(self.level_width, self.level_bottom)
+        self.allSprites = AllSprites(
+            width = tmx_map.width, 
+            height = tmx_map.height,
+            bg_tile = bg_tile)
+        
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
         self.damageSprites = pygame.sprite.Group()
