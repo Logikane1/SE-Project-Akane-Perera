@@ -226,4 +226,4 @@ class Level:
         self.attack_collision()
         self.check_constraint()
         
-        self.allSprites.draw(self.player.hitboxRect.center)
+        self.allSprites.draw(self.player.hitboxRect.center, dt)
