@@ -78,6 +78,10 @@ class Level:
                     animation_speed = ANIMATION_SPEED if not 'dark_tree' in obj.name else ANIMATION_SPEED + uniform(-1, 1)
                         
                     AnimatedSprite((obj.x, obj.y), frames, groups, z, animation_speed)
+
+            if obj.name == 'flag':
+                self.level_finish_rect = pygame.FRect((obj.x, obj.y), (obj.width, obj.height))
+        
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == "spike":
@@ -196,7 +200,9 @@ class Level:
         if self.player.hitboxRect.bottom > self.level_bottom:
             print('dead')
             
-        # player finishes level
+        # player finishes level / passes flag
+        if self.player.hitboxRect.colliderect(self.level_finish_rect):
+            print('success')
         
     def run(self, dt):
         self.displayWindow.fill('black')
