@@ -20,7 +20,7 @@ def importFolderDict(*path): # same function as importFolder but now places in a
         for image_name in image_names:
             full_path = join(folder_path, image_name)
             surface = pygame.image.load(full_path).convert_alpha()
-            frame_dict[image_names.split('.')[0]] = surface
+            frame_dict[image_name.split('.')[0]] = surface
     return frame_dict
 
 def importSubfolder(*path): # used for importing subfolders such as folders in the player, creates a dict and the keys are going to be the names and the values are a list of surfaces

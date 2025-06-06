@@ -41,6 +41,7 @@ class Game:
             'particle' : importFolder('Graphics', 'effects', 'particle'),
             'water_top' : importFolder('Graphics', 'level', 'water', 'top'),
             'water_body' : importImage('Graphics', 'level', 'water', 'body'),
+            'bg_tiles' : importFolderDict('Graphics', 'level', 'bg', 'tiles'),
         }
         
         self.font = pygame.font.Font(join('Graphics', 'ui', 'runescape_uf.ttf'), 40)

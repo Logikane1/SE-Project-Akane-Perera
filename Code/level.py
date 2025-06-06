@@ -12,10 +12,14 @@ class Level:
         
         #level data
         self.level_width = tmx_map.width * TILE_SIZE
-        self.level_bottom = tmx_map.height * TILE_SIZE
-        
+        self.level_bottom = tmx_map.height * TILE_SIZE # basically level_height
+        tmx_level_properties = tmx_map.get_layer_by_name('Data')[0].properties
+        if tmx_level_properties['bg']:
+            bg_tile = level_frames['bg_tiles'][tmx_level_properties['bg']]
+            print(bg_tile)
+            
         #groups
-        self.allSprites = AllSprites()
+        self.allSprites = AllSprites(self.level_width, self.level_bottom)
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
         self.damageSprites = pygame.sprite.Group()
