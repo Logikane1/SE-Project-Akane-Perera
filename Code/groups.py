@@ -1,5 +1,6 @@
 from gameSettings import *
-from sprites import Sprite
+from sprites import Sprite, Cloud
+from random import choice, randint
 
 class AllSprites(pygame.sprite.Group):
     def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
@@ -30,6 +31,13 @@ class AllSprites(pygame.sprite.Group):
             self.large_cloud_x = 0
             self.large_cloud_tiles = int(self.width / self.large_cloud.get_width()) + 2
             self.large_cloud_width, self.large_cloud_height = self.large_cloud.get_size()
+            
+            #small cloud
+            #timer that makes a cloud every 2.5 seconds
+            for cloud in range(20):
+                pos = (randint(0, self.width),randint(self.borders['top'], self.horizon_line))
+                surf = choice(self.small_clouds)
+                Cloud(pos, surf, self)
     
     def camera_constraint(self):
         self.offset.x = self.offset.x if self.offset.x < self.borders['left'] else self.borders['left']
