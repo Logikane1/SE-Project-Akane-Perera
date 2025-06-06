@@ -24,7 +24,9 @@ class Level:
             width = tmx_map.width, 
             height = tmx_map.height,
             bg_tile = bg_tile,
-            top_limit = tmx_level_properties['top_limit'])
+            top_limit = tmx_level_properties['top_limit'],
+            clouds = {'large': level_frames['cloud_large'], 'small': level_frames['cloud_small']},
+            horizon_line = tmx_level_properties['horizon_line'])
         
         self.collisionSprites = pygame.sprite.Group()
         self.semicollisionSprites = pygame.sprite.Group()
