@@ -49,6 +49,9 @@ class AllSprites(pygame.sprite.Group):
         
     def draw_large_cloud(self, dt):
         self.large_cloud_x +=  self.cloud_direction * self.large_cloud_speed * dt
+        if self.large_cloud_x <=-self.large_cloud_width: #if one cloud has fully exied the screen, animation will reset, making for a seamless infinite loop
+            self.large_cloud_x = 0
+            
         for cloud in range(self.large_cloud_tiles):
             left = self.large_cloud_x + self.large_cloud_width * cloud + self.offset.x
             top = self.horizon_line - self.large_cloud_height + self.offset.y
