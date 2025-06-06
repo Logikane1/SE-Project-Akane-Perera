@@ -23,7 +23,9 @@ class WorldSprites(pygame.sprite.Group):
                 else:
                     self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
         #drawing the main
-        
+        for sprite in sorted(self, key = lambda sprite: sprite.rect.centery):
+            if sprite.z == Z_LAYERS['main']:
+                self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
         
 class AllSprites(pygame.sprite.Group):
     def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
