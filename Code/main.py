@@ -25,6 +25,7 @@ class Game:
             'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
             'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
             'dark_trees' : importSubfolder('Graphics', 'level', 'trees'),
+            'flag' : importFolder('Graphics', 'level', 'flag'),
             'candle' : importFolder('Graphics', 'level', 'candle'),
             'player' : importSubfolder('Graphics', 'player'),
             'saw' : importFolder('Graphics', 'enemies', 'saw', 'animation'),
