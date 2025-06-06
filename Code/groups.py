@@ -1,6 +1,7 @@
 from gameSettings import *
 from sprites import Sprite, Cloud
 from random import choice, randint
+from gameTimer import Timer
 
 class AllSprites(pygame.sprite.Group):
     def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
@@ -34,6 +35,8 @@ class AllSprites(pygame.sprite.Group):
             
             #small cloud
             #timer that makes a cloud every 2.5 seconds
+            self.cloud_timer = Timer(2500, self.create_cloud, True)
+            self.cloud_timer.activate()
             for cloud in range(20):
                 pos = (randint(0, self.width),randint(self.borders['top'], self.horizon_line))
                 surf = choice(self.small_clouds)
@@ -65,7 +68,13 @@ class AllSprites(pygame.sprite.Group):
             top = self.horizon_line - self.large_cloud_height + self.offset.y
             self.displaySurface.blit(self.large_cloud, (left,top))
         
+    def create_cloud(self):
+        pos = (randint(self.width + 500, self.width + 600),randint(self.borders['top'], self.horizon_line))
+        surf = choice(self.small_clouds)
+        Cloud(pos, surf, self)
+        
     def draw(self, target_position, dt):
+        self.cloud_timer.update()
         self.offset.x = -(target_position[0] - WINDOW_WIDTH / 2) # creating the offset for the screen that follows the player 
         self.offset.y = -(target_position[1] - WINDOW_HEIGHT / 2)
         self.camera_constraint()
