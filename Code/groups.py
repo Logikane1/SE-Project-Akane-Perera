@@ -37,6 +37,10 @@ class AllSprites(pygame.sprite.Group):
         sea_rect = pygame.FRect(0, horizon_pos, WINDOW_WIDTH, WINDOW_HEIGHT - horizon_pos)
         pygame.draw.rect(self.displaySurface, '#92a9ce', sea_rect)
         
+        #horizon line
+        pygame.draw.line(self.displaySurface, '#fcf4f4', (0, horizon_pos), (WINDOW_WIDTH, horizon_pos), 4)
+        
+        
     def draw(self, target_position):
         self.offset.x = -(target_position[0] - WINDOW_WIDTH / 2) # creating the offset for the screen that follows the player 
         self.offset.y = -(target_position[1] - WINDOW_HEIGHT / 2)
