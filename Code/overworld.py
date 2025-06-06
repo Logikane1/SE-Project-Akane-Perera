@@ -37,7 +37,7 @@ class Overworld:
             
             #player
             if obj.name == 'Node' and obj.properties['stage'] == self.data.current_level:
-                self.icon = Icon((obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), self.allSprites, overworld_frames['icons'])
+                self.icon = Icon((obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), self.allSprites, overworld_frames['icon'])
             
             #nodes
             if obj.name == 'Node':

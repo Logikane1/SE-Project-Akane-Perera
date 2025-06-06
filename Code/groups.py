@@ -16,7 +16,7 @@ class WorldSprites(pygame.sprite.Group):
         
         # drawing the background
         for sprite in sorted(self, key = lambda sprite: sprite.z):
-            if sprite.z <= Z_LAYERS['main']:
+            if sprite.z < Z_LAYERS['main']:
                 if sprite.z == Z_LAYERS['path']:
                     if sprite.level <= self.data.unlocked_level:
                         self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
@@ -25,7 +25,10 @@ class WorldSprites(pygame.sprite.Group):
         #drawing the main
         for sprite in sorted(self, key = lambda sprite: sprite.rect.centery):
             if sprite.z == Z_LAYERS['main']:
-                self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                if hasattr(sprite, 'icon'):
+                    self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset + vector(0, -28))
+                else:
+                    self.displaySurface.blit(sprite.image, sprite.rect.topleft + self.offset)
         
 class AllSprites(pygame.sprite.Group):
     def __init__(self, width, height, clouds, horizon_line, bg_tile = None, top_limit = 0):
