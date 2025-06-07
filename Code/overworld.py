@@ -16,6 +16,7 @@ class Overworld:
         
         self.currentNode = [node for node in self.nodeSprites if node.level == 0][0]
         
+        self.path_frames = overworld_frames['path']
         self.create_path_sprites()
         
     def setup(self, tmx_map, overworld_frames):
@@ -94,12 +95,33 @@ class Overworld:
             
         # create sprites
         for key, path in path_tiles.items():
-            for tile in path:
-                PathSprite(
-                    pos = (tile.x * TILE_SIZE, tile.y * TILE_SIZE), 
-                    surf = pygame.Surface((TILE_SIZE, TILE_SIZE)), 
-                    groups = self.allSprites, 
-                    level = key)
+            for index, tile in enumerate(path):
+                if index > 0 and index < len(path) - 1:
+                    previous_tile = path[index - 1] - tile
+                    next_tile = path[index + 1] - tile
+                    
+                    if previous_tile.x == next_tile.x:
+                        surf = self.path_frames['vertical']
+                    elif previous_tile.y == next_tile.y:
+                        surf = self.path_frames['horizontal']
+                    else:
+                        if previous_tile.x == -1 and next_tile.y == -1 or previous_tile.y == -1 and next_tile.x == -1:
+                            surf = self.path_frames['tl']
+                        elif previous_tile.x == 1 and next_tile.y == 1 or previous_tile.y == 1 and next_tile.x == 1:
+                            surf = self.path_frames['br']
+                        elif previous_tile.x == -1 and next_tile.y == 1 or previous_tile.y == 1 and next_tile.x == -1:
+                            surf = self.path_frames['bl']
+                        elif previous_tile.x == 1 and next_tile.y == -1 or previous_tile.y == -1 and next_tile.x == 1:
+                            surf = self.path_frames['tr']
+                        else:
+                            surf = self.path_frames['horizontal'] # safety net incase something in path goes wrong
+                            
+                        
+                    PathSprite(
+                        pos = (tile.x * TILE_SIZE, tile.y * TILE_SIZE), 
+                        surf = surf, 
+                        groups = self.allSprites, 
+                        level = key)
             
     def input(self):
         keys = pygame.key.get_pressed()
