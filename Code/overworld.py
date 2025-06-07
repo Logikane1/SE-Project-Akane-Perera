@@ -4,10 +4,10 @@ from groups import WorldSprites
 from random import randint
 
 class Overworld:
-    def __init__(self, tmx_map, data, overworld_frames):
+    def __init__(self, tmx_map, data, overworld_frames, switch_stage):
         self.displaySurface = pygame.display.get_surface()
         self.data = data
-        
+        self.switch_stage = switch_stage
         #groups
         self.allSprites = WorldSprites(data)
         self.nodeSprites = pygame.sprite.Group()
@@ -134,6 +134,9 @@ class Overworld:
                 self.move('right')
             if keys[pygame.K_w] and self.currentNode.can_move('up'):
                 self.move('up')
+            if keys[pygame.K_RETURN]:
+                self.data.current_level = self.currentNode.level
+                self.switch_stage('level')
                 
     def move(self, direction):
         path_key = int(self.currentNode.paths[direction][0])
