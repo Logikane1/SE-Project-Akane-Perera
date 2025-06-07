@@ -1,5 +1,5 @@
 from gameSettings import *
-from sprites import Sprite, AnimatedSprite, Node, Icon
+from sprites import Sprite, AnimatedSprite, Node, Icon, PathSprite
 from groups import WorldSprites
 from random import randint
 
@@ -15,6 +15,8 @@ class Overworld:
         self.setup(tmx_map, overworld_frames)
         
         self.currentNode = [node for node in self.nodeSprites if node.level == 0][0]
+        
+        self.create_path_sprites()
         
     def setup(self, tmx_map, overworld_frames):
         # tiles
@@ -62,6 +64,43 @@ class Overworld:
                     data = self.data,
                     paths = available_paths)
         
+    def create_path_sprites(self):
+        # get tiles for path
+        nodes = {node.level : vector(node.grid_pos) for node in self.nodeSprites}
+        path_tiles = {}
+        
+        for path_id, data in self.paths.items():
+            path = data['pos']
+            start_node, end_node = nodes[data['start']], nodes[path_id]
+            path_tiles[path_id] = [start_node]
+            
+            for index, points in enumerate(path): # going through all of the points in path
+                if index < len(path) - 1: # to prevent index error
+                    start, end = vector(points), vector(path[index + 1]) # get the start point and end point of the current path and store it as a vector
+                    path_dir = (end - start) /TILE_SIZE
+                    start_tile = vector(int(start[0] / TILE_SIZE), int(start[1]/ TILE_SIZE))
+                    
+                    if path_dir.y:
+                        dir_y = 1 if path_dir.y > 0 else - 1
+                        for y in range(dir_y, int(path_dir.y) + dir_y, dir_y):
+                            path_tiles[path_id].append(start_tile + vector(0,y))
+                    
+                    if path_dir.x:
+                        dir_x = 1 if path_dir.x > 0 else - 1
+                        for x in range(dir_x, int(path_dir.x) + dir_x, dir_x):
+                            path_tiles[path_id].append(start_tile + vector(x,0))
+            
+            path_tiles[path_id].append(end_node)
+            
+        # create sprites
+        for key, path in path_tiles.items():
+            for tile in path:
+                PathSprite(
+                    pos = (tile.x * TILE_SIZE, tile.y * TILE_SIZE), 
+                    surf = pygame.Surface((TILE_SIZE, TILE_SIZE)), 
+                    groups = self.allSprites, 
+                    level = key)
+            
     def input(self):
         keys = pygame.key.get_pressed()
         if self.currentNode and not self.icon.path:

@@ -152,6 +152,7 @@ class Node(pygame.sprite.Sprite):
         self.level = level
         self.data = data
         self.paths = paths
+        self.grid_pos = (int(pos[0]) / TILE_SIZE, int(pos[1]) / TILE_SIZE)
         
     def can_move(self, direction):
         if direction in list(self.paths.keys()) and int(self.paths[direction][0][0]) <= self.data.unlocked_level:
@@ -222,3 +223,8 @@ class Icon(pygame.sprite.Sprite):
             self.rect.center += self.direction * self.speed * dt
         self.get_state()
         self.animate(dt)
+        
+class PathSprite(Sprite):
+    def __init__(self, pos, surf, groups, level):
+        super().__init__(pos, surf, groups, Z_LAYERS['path'])
+        self.level = level
