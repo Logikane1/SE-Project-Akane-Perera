@@ -42,7 +42,6 @@ class Overworld:
             start = obj.properties['start']
             end = obj.properties['end']
             self.paths[end] = {'pos': pos, 'start': start}
-        print(self.paths)
             
                 
         # nodes and player
