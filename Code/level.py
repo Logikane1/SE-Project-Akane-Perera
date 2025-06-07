@@ -6,14 +6,16 @@ from random import uniform
 from enemies import Tooth, Shell, Pearl
 
 class Level:
-    def __init__(self, tmx_map, level_frames, data):
+    def __init__(self, tmx_map, level_frames, data, switch_stage):
         self.displayWindow = pygame.display.get_surface()
         self.data = data
+        self.switch_stage = switch_stage
         
         #level data
         self.level_width = tmx_map.width * TILE_SIZE
         self.level_bottom = tmx_map.height * TILE_SIZE # basically level_height
         tmx_level_properties = tmx_map.get_layer_by_name('Data')[0].properties
+        self.level_unlock = tmx_level_properties['level_unlock']
         if tmx_level_properties['bg']:
             bg_tile = level_frames['bg_tiles'][tmx_level_properties['bg']]
         else:
@@ -210,11 +212,11 @@ class Level:
         
         # bottom constraints
         if self.player.hitboxRect.bottom > self.level_bottom:
-            print('dead')
+            self.switch_stage('overworld', -1)
             
         # player finishes level / passes flag
         if self.player.hitboxRect.colliderect(self.level_finish_rect):
-            print('success')
+            self.switch_stage('overworld', self.level_unlock)
         
     def run(self, dt):
         self.displayWindow.fill('black')
