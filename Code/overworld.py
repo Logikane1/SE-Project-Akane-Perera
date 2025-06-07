@@ -10,8 +10,11 @@ class Overworld:
         
         #groups
         self.allSprites = WorldSprites(data)
+        self.nodeSprites = pygame.sprite.Group()
         
         self.setup(tmx_map, overworld_frames)
+        
+        self.currentNode = [node for node in self.nodeSprites if node.level == 0][0]
         
     def setup(self, tmx_map, overworld_frames):
         # tiles
@@ -32,6 +35,16 @@ class Overworld:
                 z = Z_LAYERS[f'{'bg details' if obj.name == 'grass' else 'bg tiles'}']
                 Sprite((obj.x, obj.y), obj.image, self.allSprites, )
                 
+        # paths 
+        self.paths = {}
+        for obj in tmx_map.get_layer_by_name('Paths'):
+            pos = [(int(p.x + TILE_SIZE / 2), int(p.y + TILE_SIZE / 2)) for p in obj.points]
+            start = obj.properties['start']
+            end = obj.properties['end']
+            self.paths[end] = {'pos': pos, 'start': start}
+        print(self.paths)
+            
+                
         # nodes and player
         for obj in tmx_map.get_layer_by_name('Nodes'):
             
@@ -41,13 +54,25 @@ class Overworld:
             
             #nodes
             if obj.name == 'Node':
+                available_paths = {k:v for k, v in obj.properties.items() if k in ('left', 'right', 'up', 'down')}
                 Node(
                     pos = (obj.x, obj.y), 
                     surf = overworld_frames['path']['node'], 
-                    groups = self.allSprites,
+                    groups = (self.allSprites, self.nodeSprites),
                     level = obj.properties['stage'],
-                    data = self.data)
+                    data = self.data,
+                    paths = available_paths)
+        
+    def input(self):
+        keys = pygame.key.get_pressed()
+        if self.currentNode:
+            if keys[pygame.K_s] and self.currentNode.can_move('down'):
+                print('can move down')
+            
+        
         
     def run(self, dt):
+        self.input()
         self.allSprites.update(dt)
         self.allSprites.draw(self.icon.rect.center)
+        
