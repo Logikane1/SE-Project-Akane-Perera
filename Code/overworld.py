@@ -65,18 +65,30 @@ class Overworld:
         
     def input(self):
         keys = pygame.key.get_pressed()
-        if self.currentNode:
+        if self.currentNode and not self.icon.path:
             if keys[pygame.K_s] and self.currentNode.can_move('down'):
                 self.move('down')
-            
+            if keys[pygame.K_a] and self.currentNode.can_move('left'):
+                self.move('left')
+            if keys[pygame.K_d] and self.currentNode.can_move('right'):
+                self.move('right')
+            if keys[pygame.K_w] and self.currentNode.can_move('up'):
+                self.move('up')
+                
     def move(self, direction):
         path_key = int(self.currentNode.paths[direction][0])
         path_reverse = True if self.currentNode.paths[direction][-1] == 'r' else False # if node path has a r in it, reverse
         path = self.paths[path_key]['pos'][:] if not path_reverse else self.paths[path_key]['pos'][::-1] # gives the points of the position of the node, if reverse reverse the list with ::-1
         self.icon.start_move(path)
         
+    def get_current_node(self):
+        nodes = pygame.sprite.spritecollide(self.icon, self.nodeSprites, False)
+        if nodes:
+            self.currentNode = nodes[0]
+        
     def run(self, dt):
         self.input()
+        self.get_current_node()
         self.allSprites.update(dt)
         self.allSprites.draw(self.icon.rect.center)
         
