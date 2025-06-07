@@ -155,16 +155,16 @@
  <objectgroup id="4" name="Nodes">
   <object id="178" name="Node" x="576" y="768" width="64" height="64">
    <properties>
-    <property name="down" type="int" value="1"/>
+    <property name="down" value="1"/>
     <property name="stage" type="int" value="0"/>
    </properties>
   </object>
   <object id="179" name="Node" x="896" y="896" width="64" height="64">
    <properties>
     <property name="left" value="1r"/>
-    <property name="right" type="int" value="3"/>
+    <property name="right" value="3"/>
     <property name="stage" type="int" value="1"/>
-    <property name="up" type="int" value="2"/>
+    <property name="up" value="2"/>
    </properties>
   </object>
   <object id="182" name="Node" x="960" y="512" width="64" height="64">
@@ -187,10 +187,10 @@
   </object>
   <object id="185" name="Node" x="1664" y="960" width="64" height="64">
    <properties>
-    <property name="down" type="int" value="4"/>
+    <property name="down" value="4"/>
     <property name="left" value="3r"/>
     <property name="stage" type="int" value="3"/>
-    <property name="up" type="int" value="5"/>
+    <property name="up" value="5"/>
    </properties>
   </object>
  </objectgroup>
