@@ -27,11 +27,11 @@ class Game:
             5: load_pygame(join('Data', 'Levels', '5.tmx')),
             }
         self.tmx_overworld = load_pygame(join('Data', 'Overworld', 'overworld.tmx'))
-        self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.data, self.switch_stage)
+        self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
         
     def switch_stage(self, target, unlock = 0):
         if target == 'level':
-            self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.data, self.switch_stage)
+            self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
             
         else: #overworld
             if unlock > 0:
@@ -78,6 +78,15 @@ class Game:
             'path' : importFolderDict('Graphics', 'overworld', 'path'),
             'icon' : importSubfolder('Graphics', 'overworld', 'icons'),
         }
+        
+        self.audio_files = {
+            'coin': pygame.mixer.Sound(join('Audio', 'coin.wav')),
+            'jump': pygame.mixer.Sound(join('Audio', 'jump.wav')),
+            'attack': pygame.mixer.Sound(join('Audio', 'attack.wav')),
+            'damage': pygame.mixer.Sound(join('Audio', 'damage.wav')),
+            'pearl': pygame.mixer.Sound(join('Audio', 'pearl.wav')),
+            'hit': pygame.mixer.Sound(join('Audio', 'hit.wav')),
+            }
         
     def check_game_over(self):
         if self.data.health <= 0:

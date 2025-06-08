@@ -4,9 +4,10 @@ from player import Player
 from groups import AllSprites
 from random import uniform
 from enemies import Tooth, Shell, Pearl
+from gameTimer import Timer
 
 class Level:
-    def __init__(self, tmx_map, level_frames, data, switch_stage):
+    def __init__(self, tmx_map, level_frames, audio_files, data, switch_stage):
         self.displayWindow = pygame.display.get_surface()
         self.data = data
         self.switch_stage = switch_stage
@@ -42,6 +43,16 @@ class Level:
         #frames
         self.pearl_surf = level_frames['pearl']
         self.particle_frames = level_frames['particle']
+        
+        #audio
+        self.coin_sfx = audio_files['coin']
+        self.coin_sfx.set_volume(0.4)
+        
+        self.damage_sfx = audio_files['damage']
+        self.damage_sfx.set_volume(0.4)
+        self.damage_sfx_timer = Timer(500)
+        
+        self.pearl_sfx = audio_files['pearl']
         
     def setup(self, tmx_map, level_frames):
         #tiles
@@ -174,6 +185,7 @@ class Level:
             
     def create_pearl(self, pos, direction):
         Pearl(pos, (self.allSprites, self.damageSprites, self.pearlSprites), self.pearl_surf, direction, 150)
+        self.pearl_sfx.play()
         
     def pearl_collision(self):
         for sprite in self.collisionSprites:
@@ -185,6 +197,10 @@ class Level:
         for sprite in self.damageSprites:
             if sprite.rect.colliderect(self.player.hitboxRect):
                 self.player.get_damage()
+                
+                if not self.damage_sfx_timer.active:
+                    self.damage_sfx.play()
+                    self.damage_sfx_timer.activate()
                 if hasattr(sprite, 'pearl'):
                     sprite.kill()
                     ParticleEffectSprite((sprite.rect.center), self.particle_frames, self.allSprites)
@@ -195,7 +211,8 @@ class Level:
             if item_sprites:
                 item_sprites[0].activate()
                 ParticleEffectSprite((item_sprites[0].rect.center), self.particle_frames, self.allSprites)
-    
+                self.coin_sfx.play()
+                
     def attack_collision(self):
         for target in self.pearlSprites.sprites() + self.toothSprites.sprites():
             facing_target = self.player.rect.centerx < target.rect.centerx and self.player.facing_right or \
@@ -219,6 +236,7 @@ class Level:
             self.switch_stage('overworld', self.level_unlock)
         
     def run(self, dt):
+        self.damage_sfx_timer.update()
         self.displayWindow.fill('black')
         
         self.allSprites.update(dt)
