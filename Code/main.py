@@ -88,6 +88,7 @@ class Game:
             'pearl': pygame.mixer.Sound(join('Audio', 'pearl.wav')),
             }
         self.bg_music = pygame.mixer.Sound(join('Audio', 'Underclocked.mp3'))
+        self.bg_music.set_volume(0.5)
         
     def check_game_over(self):
         if self.data.health <= 0:
