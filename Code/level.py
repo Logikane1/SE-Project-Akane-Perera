@@ -38,7 +38,7 @@ class Level:
         self.pearlSprites = pygame.sprite.Group()
         self.itemSprites = pygame.sprite.Group()
         
-        self.setup(tmx_map, level_frames)
+        self.setup(tmx_map, level_frames, audio_files)
         
         #frames
         self.pearl_surf = level_frames['pearl']
@@ -54,7 +54,7 @@ class Level:
         
         self.pearl_sfx = audio_files['pearl']
         
-    def setup(self, tmx_map, level_frames):
+    def setup(self, tmx_map, level_frames, audio_files):
         #tiles
         for layer in ['Background', 'Terrain', 'Platforms', 'Foreground']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
@@ -84,7 +84,9 @@ class Level:
                     collision_sprites = self.collisionSprites, 
                     semicollision_sprites = self.semicollisionSprites,
                     frames = level_frames['player'],
-                    data = self.data)
+                    data = self.data,
+                    attack_sfx = audio_files['attack'],
+                    jump_sfx = audio_files['jump'])
                 
             else:
                 if obj.name in ('barrel', 'crate'):
@@ -106,7 +108,6 @@ class Level:
 
             if obj.name == 'flag':
                 self.level_finish_rect = pygame.FRect((obj.x, obj.y), (obj.width, obj.height))
-        
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == "spike":

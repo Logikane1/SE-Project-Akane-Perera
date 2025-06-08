@@ -85,7 +85,6 @@ class Game:
             'attack': pygame.mixer.Sound(join('Audio', 'attack.wav')),
             'damage': pygame.mixer.Sound(join('Audio', 'damage.wav')),
             'pearl': pygame.mixer.Sound(join('Audio', 'pearl.wav')),
-            'hit': pygame.mixer.Sound(join('Audio', 'hit.wav')),
             }
         
     def check_game_over(self):

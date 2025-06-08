@@ -5,7 +5,7 @@ from math import sin
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, semicollision_sprites, frames, data):
+    def __init__(self, pos, groups, collision_sprites, semicollision_sprites, frames, data, attack_sfx, jump_sfx):
         #general setup
         super().__init__(groups)
         self.z = Z_LAYERS['main']
@@ -43,6 +43,10 @@ class Player(pygame.sprite.Sprite):
             'attack cooldown' : Timer(500),
             'hit': Timer(600)
         }
+        
+        #player audio
+        self.attack_sfx = attack_sfx
+        self.jump_sfx = jump_sfx
     
     def input(self):
         keys = pygame.key.get_pressed()
@@ -73,6 +77,7 @@ class Player(pygame.sprite.Sprite):
             self.attacking = True
             self.frame_index = 0
             self.timers['attack cooldown'].activate()
+            self.attack_sfx.play()
             
     def move(self, dt):
         self.hitboxRect.x += self.direction.x * self.speed * dt
@@ -91,10 +96,12 @@ class Player(pygame.sprite.Sprite):
                 self.direction.y = -self.jumpHeight
                 self.timers['wall slide'].activate()
                 self.hitboxRect.bottom -= 1
+                self.jump_sfx.play()
             elif any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall slide'].active:
                 self.timers['wall jump'].activate()
                 self.direction.y = -self.jumpHeight
                 self.direction.x = 1 if self.on_surface['left'] else -1
+                self.jump_sfx.play()
             self.jump = False
         
         self.collision('vertical')
