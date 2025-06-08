@@ -49,7 +49,7 @@ class Level:
         self.coin_sfx.set_volume(0.4)
         
         self.damage_sfx = audio_files['damage']
-        self.damage_sfx.set_volume(0.4)
+        self.damage_sfx.set_volume(0.9)
         self.damage_sfx_timer = Timer(500)
         
         self.pearl_sfx = audio_files['pearl']
