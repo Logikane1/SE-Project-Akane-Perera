@@ -40,7 +40,6 @@ class Game:
                 self.data.health -= 1
             self.currentStage = Overworld(self.tmx_overworld, self.data, self.overworld_frames, self.switch_stage)
             
-            
     def importAssets(self):
         self.level_frames = {
             'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
@@ -80,6 +79,11 @@ class Game:
             'icon' : importSubfolder('Graphics', 'overworld', 'icons'),
         }
         
+    def check_game_over(self):
+        if self.data.health <= 0:
+            pygame.quit()
+            sys.exit()
+            
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
@@ -90,6 +94,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
             
+            self.check_game_over()
             self.currentStage.run(dt)
             self.ui.update(dt)
             pygame.display.update()
