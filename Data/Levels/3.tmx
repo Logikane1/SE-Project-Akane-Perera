@@ -183,7 +183,7 @@
   </object>
   <object id="58" name="barrel" gid="168" x="512" y="640" width="46" height="50"/>
   <object id="59" name="crate" gid="169" x="1536" y="1408" width="50" height="36"/>
-  <object id="71" name="Player" gid="176" x="4224" y="1472" width="110" height="96"/>
+  <object id="71" name="Player" gid="176" x="64" y="640" width="110" height="96"/>
   <object id="94" name="flag" gid="186" x="4352" y="1472" width="68" height="186"/>
   <object id="161" name="crate" gid="169" x="1600" y="1408" width="50" height="36"/>
   <object id="162" name="crate" gid="169" x="1536" y="1152" width="50" height="36"/>

@@ -194,7 +194,7 @@
   </object>
   <object id="58" name="barrel" gid="168" x="896" y="128" width="46" height="50"/>
   <object id="59" name="crate" gid="169" x="960" y="128" width="50" height="36"/>
-  <object id="71" name="Player" gid="176" x="192" y="1408" width="110" height="96"/>
+  <object id="71" name="Player" gid="176" x="256" y="1408" width="110" height="96"/>
   <object id="94" name="flag" gid="186" x="3072" y="1024" width="68" height="186"/>
   <object id="102" name="dark_tree_bg" gid="167" x="128" y="1408" width="128" height="128"/>
   <object id="182" name="dark_tree" gid="166" x="192" y="1024" width="128" height="128"/>
