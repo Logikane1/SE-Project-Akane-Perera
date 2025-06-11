@@ -35,7 +35,8 @@ class Overworld:
             if obj.name == 'palm':
                 AnimatedSprite((obj.x, obj.y), overworld_frames['palms'], self.allSprites, Z_LAYERS['main'], randint(4, 6))
             else:
-                z = Z_LAYERS[f'{'bg details' if obj.name == 'grass' else 'bg tiles'}']
+                z_key = 'bg details' if obj.name == 'grass' else 'bg tiles'
+                z = Z_LAYERS[z_key]
                 Sprite((obj.x, obj.y), obj.image, self.allSprites, )
                 
         # paths 
