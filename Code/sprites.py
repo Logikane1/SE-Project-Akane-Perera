@@ -7,14 +7,14 @@ class Sprite(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_frect(topleft = pos) 
-        self.previousRect = self.rect.copy()
-        self.z = z
+        self.previousRect = self.rect.copy() # Used for tracking collisions and movement
+        self.z = z # Determines rendering layer
         
 class AnimatedSprite(Sprite):
     def __init__(self, pos, frames, groups, z = Z_LAYERS['main'], animation_speed = ANIMATION_SPEED):
         self.frames, self.frame_index = frames, 0 # self.frames is going to be a list of surfaces, self.frameindex will allow to pick 1 surface
         super().__init__(pos, self.frames[self.frame_index], groups, z)
-        self.animation_speed = animation_speed
+        self.animation_speed = animation_speed # Controls how fast animation progresses
         
     def animate(self, dt):
         self.frame_index += self.animation_speed * dt # this is to make sure the animations are playing at the same speed on every computer
@@ -28,7 +28,7 @@ class Item(AnimatedSprite):
         super().__init__(pos, frames, groups)
         self.rect.center = pos
         self.item_type = item_type
-        self.data = data
+        self.data = data # Reference to game data (e.g., player stats)
         
     def activate(self):
         if self.item_type == 'silver':
@@ -42,11 +42,11 @@ class Item(AnimatedSprite):
         if self.item_type == 'potion':
             self.data.health += 1
         
-class ParticleEffectSprite(AnimatedSprite):
+class ParticleEffectSprite(AnimatedSprite): # Temporary animated effect 
     def __init__(self, pos, frames, groups):
         super().__init__(pos, frames, groups)
         self.rect.center = pos
-        self.z = Z_LAYERS['fg']
+        self.z = Z_LAYERS['fg'] # Foreground layer for effects
         
     def animate(self, dt): # Plays the animation once then destorys the object
         self.frame_index += self.animation_speed * dt
@@ -58,10 +58,13 @@ class ParticleEffectSprite(AnimatedSprite):
 class MovingSprite(AnimatedSprite):
     def __init__(self, frames, groups, start_position, end_position, move_dir, speed, flip = False):
         super().__init__(start_position, frames, groups)
+        
+        # Adjust alignment based on movement direction
         if move_dir == 'x':
             self.rect.midleft = start_position
         else:
             self.rect.midtop = start_position
+            
         self.start_position = start_position
         self.end_position = end_position
         
@@ -71,8 +74,8 @@ class MovingSprite(AnimatedSprite):
         self.direction = vector(1,0) if move_dir == 'x' else vector(0,1)
         self.move_dir = move_dir
         
-        self.flip = flip
-        self.reverse = {'x': False, 'y': False}
+        self.flip = flip # Whether to visually flip sprite based on direction
+        self.reverse = {'x': False, 'y': False} # Flip state tracking
         
     def checkBorder(self): # keeps platform in the rectangle of its movement 
         if self.move_dir == 'x': # for platforms moving horizontally
@@ -109,7 +112,7 @@ class Spike(Sprite):
         self.end_angle = end_angle
         self.angle = self.start_angle # a
         self.direction = 1
-        self.full_circle = True if self.end_angle == -1 else False
+        self.full_circle = True if self.end_angle == -1 else False # If true, the spike completes full rotation
         
         # trigonometry
         y = self.center[1] + sin(radians(self.angle)) * self.radius # y = sin(a) x r
@@ -141,7 +144,7 @@ class Cloud(Sprite):
         self.rect.x += self.direction * self.speed * dt
         
         if self.rect.right <= 0:
-            self.kill()
+            self.kill() # Remove cloud when off screen
             
 class Node(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, level, data, paths):
@@ -151,10 +154,10 @@ class Node(pygame.sprite.Sprite):
         self.z = Z_LAYERS['path']
         self.level = level
         self.data = data
-        self.paths = paths
+        self.paths = paths # Valid movement directions
         self.grid_pos = (int(pos[0]) / TILE_SIZE, int(pos[1]) / TILE_SIZE)
         
-    def can_move(self, direction):
+    def can_move(self, direction): # Checks if the path exists and the target level is unlocked
         if direction in list(self.paths.keys()) and int(self.paths[direction][0][0]) <= self.data.unlocked_level:
             return True  
         
@@ -180,7 +183,7 @@ class Icon(pygame.sprite.Sprite):
         self.path = path[1:]
         self.find_path()
     
-    def find_path(self): #checks for which direction the player can go in
+    def find_path(self): # Determines movement direction between path points
         if self.path:
             if self.rect.centerx == self.path[0][0]: #vertical axis
                 self.direction = vector(0, 1 if self.path[0][1] > self.rect.centery else -1) 
@@ -189,7 +192,7 @@ class Icon(pygame.sprite.Sprite):
         else:
             self.direction = vector()
             
-    def point_collision(self):
+    def point_collision(self): # Snap icon to path points to avoid overshooting
         if self.direction.y == 1 and self.rect.centery >= self.path[0][1] or \
             self.direction.y == -1 and self.rect.centery <= self.path[0][1]:
             self.rect.centery = self.path[0][1]
@@ -224,7 +227,7 @@ class Icon(pygame.sprite.Sprite):
         self.get_state()
         self.animate(dt)
         
-class PathSprite(Sprite):
+class PathSprite(Sprite): # Represents paths between nodes on the overworld map
     def __init__(self, pos, surf, groups, level):
         super().__init__(pos, surf, groups, Z_LAYERS['path'])
         self.level = level

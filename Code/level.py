@@ -17,12 +17,14 @@ class Level:
         self.level_bottom = tmx_map.height * TILE_SIZE # basically level_height
         tmx_level_properties = tmx_map.get_layer_by_name('Data')[0].properties
         self.level_unlock = tmx_level_properties['level_unlock']
-        if tmx_level_properties['bg']:
+        if tmx_level_properties['bg']: # background tile is selected based on level properties; fallback is None if not specified
             bg_tile = level_frames['bg_tiles'][tmx_level_properties['bg']]
         else:
             bg_tile = None
             
         #groups
+        # Create the main sprite group for managing all rendering and camera scrolling.
+        # Also includes environmental features like clouds and background tiles.
         self.allSprites = AllSprites(
             width = tmx_map.width, 
             height = tmx_map.height,
@@ -56,13 +58,15 @@ class Level:
         
     def setup(self, tmx_map, level_frames, audio_files):
         #tiles
+        # Loop through each visual/interactive layer and place tiles accordingly.
+        # Some tiles are collision-only, others are decorative. 
         for layer in ['Background', 'Terrain', 'Platforms', 'Foreground']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
                 groups = [self.allSprites]
-                
+                # Add collision groups based on layer type
                 if layer == 'Terrain': groups.append(self.collisionSprites)
                 if layer == 'Platforms': groups.append(self.semicollisionSprites)
-                
+                # Assign correct z-layer for rendering order
                 match layer:
                     case 'Background': z = Z_LAYERS['bg tiles']
                     case 'Foreground': z = Z_LAYERS['bg tiles']
@@ -111,6 +115,8 @@ class Level:
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == "spike":
+                # Set up moving spike enemies in a circular arc path
+                # Uses the start and end angle from Tiled properties to determine movement arc
                 Spike(
                     pos = (obj.x + obj.width / 2, obj.y + obj.height / 2),
                     surf = level_frames['spike'],
@@ -120,6 +126,7 @@ class Level:
                     end_angle = obj.properties['end angle'],
                     groups = (self.allSprites, self.damageSprites))
                 for radius in range(0, obj.properties['radius'], 20):
+                    # Create spike chains visually connecting to main spike enemy
                     Spike(
                         pos = (obj.x + obj.width / 2, obj.y + obj.height / 2),
                         surf = level_frames['spike_chain'],
@@ -133,6 +140,7 @@ class Level:
             else:
                 frames = level_frames[obj.name]
                 groups = (self.allSprites, self.semicollisionSprites) if obj.properties['platform'] else (self.allSprites, self.damageSprites)
+                # Logic for horizontal or vertical moving platforms
                 if obj.width > obj.height: # horizontal moving platforms
                     move_dir = 'x'
                     start_position = (obj.x, obj.y + obj.height / 2)
@@ -143,7 +151,7 @@ class Level:
                     end_position = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
                 MovingSprite(frames, groups, start_position, end_position, move_dir, speed, obj.properties['flip'])
-                
+                # If the object is a moving saw, draw a chain of saw links along its path
                 if obj.name == 'saw':
                     if move_dir == 'x':
                         y = start_position[1] - level_frames['saw chain'].get_height() / 2 # middle of the rectangle
@@ -174,7 +182,8 @@ class Level:
         for obj in tmx_map.get_layer_by_name('Water'):
             rows = int(obj.height / TILE_SIZE)
             columns = int(obj.width / TILE_SIZE)
-            
+            # Water tiles are stacked based on their row index
+            # top row is animated, lower rows are static body tiles 
             for row in range(rows):
                 for column in range(columns):
                     x = obj.x + column * TILE_SIZE
@@ -216,6 +225,7 @@ class Level:
                 
     def attack_collision(self):
         for target in self.pearlSprites.sprites() + self.toothSprites.sprites():
+            # Enemies that are hit during the player's attack animation and in the correct direction will "reverse"
             facing_target = self.player.rect.centerx < target.rect.centerx and self.player.facing_right or \
                             self.player.rect.centerx > target.rect.centerx and not self.player.facing_right
             if target.rect.colliderect(self.player.rect) and self.player.attacking and facing_target:
@@ -229,14 +239,15 @@ class Level:
             self.player.hitboxRect.right = self.level_width
         
         # bottom constraints
+        # This prevents the player from going off-screen or below the map
         if self.player.hitboxRect.bottom > self.level_bottom:
-            self.switch_stage('overworld', -1)
+            self.switch_stage('overworld', -1) # reset or fail level
             
         # player finishes level / passes flag
         if self.player.hitboxRect.colliderect(self.level_finish_rect):
             self.switch_stage('overworld', self.level_unlock)
         
-    def run(self, dt):
+    def run(self, dt): # just calling all necessary functions
         self.damage_sfx_timer.update()
         self.displayWindow.fill('black')
         
@@ -247,4 +258,4 @@ class Level:
         self.attack_collision()
         self.check_constraint()
         
-        self.allSprites.draw(self.player.hitboxRect.center, dt)
+        self.allSprites.draw(self.player.hitboxRect.center, dt) # Draw everything relative to player's position

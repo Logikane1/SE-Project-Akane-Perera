@@ -6,17 +6,17 @@ from gameTimer import Timer
 class UI:
     def __init__(self, font, frames):
         self.display_surface = pygame.display.get_surface()
-        self.sprites = pygame.sprite.Group()
+        self.sprites = pygame.sprite.Group() # Group to manage all UI sprite objects
         self.font = font
         
         # health / hearts
-        self.heart_frames = frames['heart']
+        self.heart_frames = frames['heart'] # List of heart animation frames (images)
         self.heart_surf_width = self.heart_frames[0].get_width()
-        self.heart_padding = 5
+        self.heart_padding = 5 # Space between hearts
         
         # coins
         self.coin_amount = 0
-        self.coin_timer = Timer(1000)
+        self.coin_timer = Timer(1000) # Timer to control how long coin display stays visible (1 second)
         self.coin_surf = frames['coin']
         
         
@@ -24,10 +24,11 @@ class UI:
     def create_hearts(self, amount):
         for sprite in self.sprites:
             sprite.kill()
-        for heart in range(amount):
+            
+        for heart in range(amount): # Calculate x position with padding, y fixed at 10 pixels from top
             x = 10 + heart * (self.heart_surf_width + self.heart_padding)
             y = 10
-            Heart((x,y), self.heart_frames, self.sprites)
+            Heart((x,y), self.heart_frames, self.sprites) # Create a new Heart sprite and add it to the group
     
     def display_text(self):
         if self.coin_timer.active:
@@ -51,9 +52,9 @@ class UI:
 class Heart(AnimatedSprite):
     def __init__(self, pos, frames, groups):
         super().__init__(pos, frames, groups)
-        self.active = False
+        self.active = False  # Whether the heart is currently animating
         
-    def animate(self, dt):
+    def animate(self, dt): # Animate the heart by cycling through its frames based on delta time.
         self.frame_index += ANIMATION_SPEED * dt
         if self.frame_index < len(self.frames):
             self.image = self.frames[int(self.frame_index)]
@@ -65,5 +66,5 @@ class Heart(AnimatedSprite):
         if self.active:
             self.animate(dt)
         else:
-            if randint(0, 2000) == 1: # animates the hearts randomly 
+            if randint(0, 2000) == 1: # randomly activate the animation sometimes to add a lively effect.
                 self.active = True

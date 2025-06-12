@@ -18,6 +18,8 @@ class Game:
         
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui) 
+        
+        # all of the levels
         self.tmx_maps = {
             0: load_pygame(join('Data', 'Levels', '0.tmx')),
             1: load_pygame(join('Data', 'Levels', '1.tmx')),
@@ -26,11 +28,12 @@ class Game:
             4: load_pygame(join('Data', 'Levels', '4.tmx')),
             5: load_pygame(join('Data', 'Levels', '5.tmx')),
             }
+        #overworld level
         self.tmx_overworld = load_pygame(join('Data', 'Overworld', 'overworld.tmx'))
         self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
         self.bg_music.play(-1)
         
-    def switch_stage(self, target, unlock = 0):
+    def switch_stage(self, target, unlock = 0): # switches between Level and Overworld
         if target == 'level':
             self.currentStage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.audio_files, self.data, self.switch_stage)
             
@@ -41,7 +44,7 @@ class Game:
                 self.data.health -= 1
             self.currentStage = Overworld(self.tmx_overworld, self.data, self.overworld_frames, self.switch_stage)
             
-    def importAssets(self):
+    def importAssets(self): # Basically where are visual assets are imported via support.py
         self.level_frames = {
             'floor_spikes' : importFolder('Graphics', 'enemies', 'floor_spikes'),
             'fire_trap' : importFolder('Graphics', 'enemies', 'fire_trap'),
@@ -90,7 +93,7 @@ class Game:
         self.bg_music = pygame.mixer.Sound(join('Audio', 'Underclocked.mp3'))
         self.bg_music.set_volume(0.5)
         
-    def check_game_over(self):
+    def check_game_over(self): # if player out of health, game closes
         if self.data.health <= 0:
             pygame.quit()
             sys.exit()

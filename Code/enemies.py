@@ -10,8 +10,8 @@ class Tooth(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft = pos)
         self.z = Z_LAYERS['main']
         
-        self.direction = choice((-1,1))
-        self.collision_rects = [sprite.rect for sprite in collision_sprites]
+        self.direction = choice((-1,1)) # Start randomly moving left or right
+        self.collision_rects = [sprite.rect for sprite in collision_sprites] # Terrain it can collide with
         self.speed = 200
         
         self.hit_timer = Timer(250)
@@ -32,6 +32,8 @@ class Tooth(pygame.sprite.Sprite):
         self.rect.x += self.direction * self.speed * dt
         
         #reverse direction
+        # 1. Detect if there's floor ahead, if not, turn around
+        # 2. Detect if it hits a wall, if so, turn around
         floor_rect_right = pygame.FRect(self.rect.bottomright, (1,1))
         floor_rect_left = pygame.FRect(self.rect.bottomleft, (-1,1))
         wall_rect = pygame.FRect(self.rect.topleft + vector(-1, 0), (self.rect.width + 2, 1)) # gives us wall rectangle 
@@ -71,6 +73,7 @@ class Shell(pygame.sprite.Sprite):
         player_front = shell_pos.x < player_pos.x if self.bullet_direction > 0 else shell_pos.x > player_pos.x
         player_level = abs(shell_pos.y - player_pos.y) < 30
         
+        # Only fire if player is within range and in front
         if player_near and player_front and player_level and not self.shootTimer.active:
             self.state = 'fire'
             self.frame_index = 0
@@ -85,12 +88,13 @@ class Shell(pygame.sprite.Sprite):
         if self.frame_index < len(self.frames[self.state]):
             self.image = self.frames[self.state][int(self.frame_index)]
             
-            # fire animation
+            # Fire logic at frame 3 of fire animation
             if self.state == 'fire' and int(self.frame_index) == 3 and not self.has_fired:
                 self.create_pearl(self.rect.center, self.bullet_direction)
                 self.has_fired = True
             
         else:
+            # Reset state after animation completes
             self.frame_index = 0
             if self.state == 'fire':
                 self.state = 'idle'
@@ -98,10 +102,10 @@ class Shell(pygame.sprite.Sprite):
 
 class Pearl(pygame.sprite.Sprite):
     def __init__(self, pos, groups, surf, direction, speed):
-        self.pearl = True
+        self.pearl = True # Special tag to identify this sprite as a projectile
         super().__init__(groups)
         self.image = surf
-        self.rect = self.image.get_frect(center = pos + vector(50 * direction, 0))
+        self.rect = self.image.get_frect(center = pos + vector(50 * direction, 0)) # Spawn slightly in front of the shooter based on direction
         self.direction = direction
         self.speed = speed
         self.z = Z_LAYERS['main']
@@ -116,6 +120,6 @@ class Pearl(pygame.sprite.Sprite):
     def update(self, dt):
         for timer in self.timers.values():
             timer.update()
-        self.rect.x += self.direction * self.speed * dt
+        self.rect.x += self.direction * self.speed * dt # Move projectile
         if not self.timers['lifetime'].active:
             self.kill() # removing the pearl after 5 seconds

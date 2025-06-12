@@ -8,54 +8,60 @@ class Overworld:
         self.displaySurface = pygame.display.get_surface()
         self.data = data
         self.switch_stage = switch_stage
-        #groups
+        
+        #Initialise Groups
         self.allSprites = WorldSprites(data)
         self.nodeSprites = pygame.sprite.Group()
         
+        # Setup overworld tiles, nodes, objects, paths, and icon
         self.setup(tmx_map, overworld_frames)
         
+        # Identify the current node based on player progress
         self.currentNode = [node for node in self.nodeSprites if node.level == 0][0]
         
+        # Store path frame images and create visual path tiles
         self.path_frames = overworld_frames['path']
         self.create_path_sprites()
         
     def setup(self, tmx_map, overworld_frames):
-        # tiles
+        # static tile background for the overworld
         for layer in ['main', 'top']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
                 Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, self.allSprites, Z_LAYERS['bg tiles'])
                 
-        #water
+        # animated water tiles across the map
         for column in range(tmx_map.width):
             for row in range(tmx_map.height):
                 AnimatedSprite((column * TILE_SIZE, row * TILE_SIZE), overworld_frames['water'], self.allSprites, Z_LAYERS['bg'])
 
-        #objects
+        #Create environment objects like palms or grass
         for obj in tmx_map.get_layer_by_name('Objects'):
             if obj.name == 'palm':
+                # Randomize palm animation speed for visual variety
                 AnimatedSprite((obj.x, obj.y), overworld_frames['palms'], self.allSprites, Z_LAYERS['main'], randint(4, 6))
             else:
+                # Choose Z layer based on object type (e.g. grass is on 'bg details')
                 z_key = 'bg details' if obj.name == 'grass' else 'bg tiles'
                 z = Z_LAYERS[z_key]
                 Sprite((obj.x, obj.y), obj.image, self.allSprites, )
                 
-        # paths 
+        # paths connecting nodes from Tiled map properties 
         self.paths = {}
-        for obj in tmx_map.get_layer_by_name('Paths'):
+        for obj in tmx_map.get_layer_by_name('Paths'): # Convert path points into pixel positions
             pos = [(int(p.x + TILE_SIZE / 2), int(p.y + TILE_SIZE / 2)) for p in obj.points]
             start = obj.properties['start']
             end = obj.properties['end']
             self.paths[end] = {'pos': pos, 'start': start}
             
                 
-        # nodes and player
+        #Setup all nodes and place the player's icon at the current level
         for obj in tmx_map.get_layer_by_name('Nodes'):
             
             #player
             if obj.name == 'Node' and obj.properties['stage'] == self.data.current_level:
                 self.icon = Icon((obj.x + TILE_SIZE / 2, obj.y + TILE_SIZE / 2), self.allSprites, overworld_frames['icon'])
             
-            #nodes
+            # Collect path directions (left/right/up/down) from Tiled properties
             if obj.name == 'Node':
                 available_paths = {k:v for k, v in obj.properties.items() if k in ('left', 'right', 'up', 'down')}
                 Node(
@@ -66,7 +72,7 @@ class Overworld:
                     data = self.data,
                     paths = available_paths)
         
-    def create_path_sprites(self):
+    def create_path_sprites(self): # translates logical paths between nodes into visual tile sprites. It determines direction and corner types to match path tiles.
         # get tiles for path
         nodes = {node.level : vector(node.grid_pos) for node in self.nodeSprites}
         path_tiles = {}
@@ -76,6 +82,7 @@ class Overworld:
             start_node, end_node = nodes[data['start']], nodes[path_id]
             path_tiles[path_id] = [start_node]
             
+            # Convert vector path into tile positions
             for index, points in enumerate(path): # going through all of the points in path
                 if index < len(path) - 1: # to prevent index error
                     start, end = vector(points), vector(path[index + 1]) # get the start point and end point of the current path and store it as a vector
@@ -124,7 +131,7 @@ class Overworld:
                         groups = self.allSprites, 
                         level = key)
             
-    def input(self):
+    def input(self): # basic oveworld movement
         keys = pygame.key.get_pressed()
         if self.currentNode and not self.icon.path:
             if keys[pygame.K_s] and self.currentNode.can_move('down'):
@@ -136,16 +143,17 @@ class Overworld:
             if keys[pygame.K_w] and self.currentNode.can_move('up'):
                 self.move('up')
             if keys[pygame.K_RETURN]:
+                # Set the new current level and switch to the level scene
                 self.data.current_level = self.currentNode.level
                 self.switch_stage('level')
                 
-    def move(self, direction):
+    def move(self, direction): # Called when the player chooses to move in a valid direction
         path_key = int(self.currentNode.paths[direction][0])
         path_reverse = True if self.currentNode.paths[direction][-1] == 'r' else False # if node path has a r in it, reverse
         path = self.paths[path_key]['pos'][:] if not path_reverse else self.paths[path_key]['pos'][::-1] # gives the points of the position of the node, if reverse reverse the list with ::-1
         self.icon.start_move(path)
         
-    def get_current_node(self):
+    def get_current_node(self): # Checks if the icon overlaps with a node and updates the currentNode
         nodes = pygame.sprite.spritecollide(self.icon, self.nodeSprites, False)
         if nodes:
             self.currentNode = nodes[0]
