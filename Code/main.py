@@ -11,7 +11,7 @@ from overworld import Overworld
 class Game:
     def __init__(self):
         pygame.init()
-        self.displayWindow = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+        self.displayWindow = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("THE ARCHON")
         self.clock = pygame.time.Clock()
         self.importAssets()
