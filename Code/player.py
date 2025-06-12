@@ -35,20 +35,23 @@ class Player(pygame.sprite.Sprite):
         self.on_surface = {'floor': False, 'left': False, 'right': False}
         self.platform = None
         
+        #iframes
+        self.invincible = False
+        
         #timers
         self.timers = {
             'wall jump': Timer(300),
             'wall slide': Timer(200),
             'platform fall': Timer(100),
             'attack cooldown' : Timer(500),
-            'hit': Timer(600)
+            'hit': Timer(600, self.end_invincibility)
         }
         
         #player audio
         self.attack_sfx = attack_sfx
         self.jump_sfx = jump_sfx
         self.jump_sfx.set_volume(0.1)
-    
+        
     def input(self):
         keys = pygame.key.get_pressed()
         inputVector = vector(0,0)
@@ -112,6 +115,9 @@ class Player(pygame.sprite.Sprite):
     def platformMoving(self, dt):
         if self.platform:
             self.hitboxRect.topleft += self.platform.direction * self.platform.speed * dt # makes it so player moves along with a moving platform its standing on
+    
+    def end_invincibility(self):
+        self.invincible = False
     
     def checkContact(self):
         floor_rect = pygame.Rect(self.hitboxRect.bottomleft,(self.hitboxRect.width,2))
@@ -189,8 +195,9 @@ class Player(pygame.sprite.Sprite):
                     self.state = 'jump' if self.direction.y < 0 else 'fall'
     
     def get_damage(self):
-        if not self.timers['hit'].active:
+        if not self.invincible:
             self.data.health -= 1
+            self.invincible = True
             self.timers['hit'].activate()
     
     def flicker(self):
