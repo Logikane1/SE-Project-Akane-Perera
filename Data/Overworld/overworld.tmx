@@ -175,8 +175,8 @@
   </object>
   <object id="183" name="Node" x="1536" y="1216" width="64" height="64">
    <properties>
+    <property name="right" value="4r"/>
     <property name="stage" type="int" value="4"/>
-    <property name="up" value="4r"/>
    </properties>
   </object>
   <object id="184" name="Node" x="1408" y="448" width="64" height="64">
@@ -189,8 +189,8 @@
    <properties>
     <property name="down" value="4"/>
     <property name="left" value="3r"/>
+    <property name="right" value="5"/>
     <property name="stage" type="int" value="3"/>
-    <property name="up" value="5"/>
    </properties>
   </object>
  </objectgroup>
